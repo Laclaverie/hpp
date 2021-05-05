@@ -1,4 +1,4 @@
-<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>0</x><y>390</y><w>260</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Reader&gt;&gt;
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>130</x><y>464</y><w>260</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Reader&gt;&gt;
 Package::coronavirusTrack
 {Some Properties}
 --
@@ -12,7 +12,7 @@ Cut(String line) : String
 Putin2Q(String cutline)
 --
 note : readerqueue : string -&gt; id,date,id
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>380</x><y>0</y><w>210</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Main&gt;&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>74</y><w>210</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Main&gt;&gt;
 Package::coronavirusTrack
 {Some Properties}
 --
@@ -21,7 +21,7 @@ Package::coronavirusTrack
 --
 #Operation(i: int): int
 /+AbstractOperation()/
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>370</x><y>390</y><w>230</w><h>260</h></coordinates><panel_attributes>&lt;&lt;Process&gt;&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>500</x><y>464</y><w>230</w><h>260</h></coordinates><panel_attributes>&lt;&lt;Process&gt;&gt;
 Package::coronavirusTrack
 {Some Properties}
 --
@@ -37,7 +37,7 @@ putIntoQueue()
 --
 note : writerqueue : string -&gt; top1_country_origin, top1_chain_root_person_id, top1_chain_score; top2_country_origin, top2_chain_root_person_id, top2_chain_score; top3_country_origin, top3_chain_root_person_id, top3_chain_score
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>700</x><y>390</y><w>250</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Writer&gt;&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>830</x><y>464</y><w>250</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Writer&gt;&gt;
 Package::coronavirusTrack
 {Some Properties}
 --
@@ -49,4 +49,4 @@ Writer(directory, writerqueue)
 --
 #Operation(i: int): int
 /+AbstractOperation()/
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>80</x><y>180</y><w>410</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>390;10;280;90;180;90;10;210</additional_attributes></element><element><id>Relation</id><coordinates><x>480</x><y>180</y><w>30</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;210</additional_attributes></element><element><id>Relation</id><coordinates><x>500</x><y>180</y><w>340</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;100;90;210;90;320;210</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>210</x><y>254</y><w>410</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>390;10;280;90;180;90;10;210</additional_attributes></element><element><id>Relation</id><coordinates><x>610</x><y>254</y><w>30</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;210</additional_attributes></element><element><id>Relation</id><coordinates><x>630</x><y>254</y><w>340</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;100;90;210;90;320;210</additional_attributes></element></diagram>

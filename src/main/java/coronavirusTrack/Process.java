@@ -12,7 +12,7 @@ public class Process {
 	private ArrayBlockingQueue<String> readerqueue_; // non utilisé dans un premier temps
 	private ArrayBlockingQueue<String> writterqueue_; // non utilisé dans un premier temps
 	private LinkedList<LinkedList<String>> chaine_ = null;
-	private ArrayList<ArrayList<ArrayList<ArrayList<Integer>>>> chaineArrayList_ = null;
+	private ArrayList<ArrayList<ArrayList<ArrayList<Integer>>>> chaineArrayList_ =new ArrayList<ArrayList<ArrayList<ArrayList<Integer>>>>();
 
 	public Process(ArrayBlockingQueue<String> readerqueue, ArrayBlockingQueue<String> writterqueue) {
 		this.readerqueue_ = readerqueue;
@@ -42,9 +42,12 @@ public class Process {
 		Integer dateContamined = Integer.parseInt(data[1]);
 		Integer idContaminedBy;
 		int index = -1;
-		if (data[2] == "unknow") {
+		System.out.println(data[2]);
+		if (data[2].equals("unknow")) {
+			System.out.println("je suis là");
 			idContaminedBy = -1;
 		} else {
+			System.out.println("je suis ici");
 			idContaminedBy = Integer.parseInt(data[2]);
 		}
 
@@ -63,7 +66,6 @@ public class Process {
 			do {
 				while (j < chaineArrayList_.get(i).size()) { // parcourir la ième chaine de contamination.
 					while (k < chaineArrayList_.get(i).get(j).size()) {// Parcourir la liste des malades de la chaine
-
 						if (chaineArrayList_.get(i).get(j).get(k).get(0) == idContaminedBy) {
 							contains = true;
 							index = i;
