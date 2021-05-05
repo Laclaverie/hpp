@@ -1,5 +1,6 @@
 package coronavirusTrack;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -20,6 +21,24 @@ public class Reader {
 		
 	}
 	
+	// Functions
+	
+	public String Cut(String line) {
+		
+		String cut_line = null;
+		
+		
+		
+		return cut_line; 
+	}
+	
+	public void Search() {
+		//f = new File((String)directory_);
+		File[] paths;
+		File p = null;
+		p = new File(directory_.toString());
+		paths = p.listFiles();
+	}
 	
 	
 	
