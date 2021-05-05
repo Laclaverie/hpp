@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class Process {
-	private ArrayBlockingQueue<String> readerqueue_; // non utilisé dans un premier temps 
+	private ArrayBlockingQueue<String> readerqueue_; // non utilisé dans un premier temps
 	private ArrayBlockingQueue<String> writterqueue_; // non utilisé dans un premier temps
 	private LinkedList<String> chaine_ = null;
 
@@ -12,9 +12,7 @@ public class Process {
 		this.readerqueue_ = readerqueue;
 		this.writterqueue_ = writterqueue;
 	}
-	
-	
-	
+
 	public void parseQueue() {
 		/**
 		 * Extraire les informations de la queue
@@ -26,13 +24,16 @@ public class Process {
 		/**
 		 * Mets en forme les datas et les envois dans la queue d'écriture
 		 */
+
+	}
+	public void updateChaine(int contaminedBy, int id) {
 		
 	}
 
 	public String[] getInformation(String s) {
 		/**
-		 * Entree : string du type "id,diagnosed_ts,contaminated_by"
-		 * 
+		 * Entree @param : s a {@code String} du type "id,diagnosed_ts,contaminated_by"
+		 * Sortie
 		 */
 		return s.split(",");
 
