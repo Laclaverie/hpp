@@ -5,10 +5,13 @@ public class Malade {
 	private long id_;
 	private long dateContamined_;
 	private long idContaminedBy_;
+	private long idPays_;
 	public Malade(long []data) {
 		setId_(data[0]);
 		setDateContamined_(data[1]);
 		setIdContaminedBy_(data[2]);
+		setIdPays_(data[3]);
+		
 		
 	}
 	public void printMalade() {
@@ -31,6 +34,12 @@ public class Malade {
 	}
 	public void setIdContaminedBy_(long idContaminedBy_) {
 		this.idContaminedBy_ = idContaminedBy_;
+	}
+	public long getIdPays_() {
+		return idPays_;
+	}
+	public void setIdPays_(long idPays_) {
+		this.idPays_ = idPays_;
 	}
 }
  
