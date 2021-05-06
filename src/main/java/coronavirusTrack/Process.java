@@ -57,6 +57,7 @@ public class Process {
 				map.put(data[0], chaine_.size());
 			} else {
 				chaine_.get(chainNumber).add(m);
+
 			}
 
 		}
@@ -101,99 +102,3 @@ public class Process {
 	}
 
 }
-
-/*
- * public void updateChaineArrayList(String s) {
- * 
- * String data[] = getInformation(s); // data[0] = id, data[1]=dateContamined,
- * data[2] = idContaminedBy Integer id = Integer.parseInt(data[0]); Integer
- * dateContamined = Integer.parseInt(data[1]); Integer idContaminedBy; int index
- * = -1; System.out.println(data[2]); if (data[2].equals("unknow")) {
- * System.out.println("je suis là"); idContaminedBy = -1; } else {
- * System.out.println("je suis ici"); idContaminedBy =
- * Integer.parseInt(data[2]); }
- * 
- * if (chaineArrayList_.size() == 0 || idContaminedBy == -1) {// on assume le
- * fait que le premier malade n'a été // contaminé par personne
- * creerNouvelleChaineArrayList(id, dateContamined);
- * 
- * } else {
- * 
- * int i = 0; int j = 0; int k = 0; boolean contains = false; int taille =
- * chaineArrayList_.size();
- * 
- * do { while (j < chaineArrayList_.get(i).size()) { // parcourir la ième chaine
- * de contamination. while (k < chaineArrayList_.get(i).get(j).size()) {//
- * Parcourir la liste des malades de la chaine if
- * (chaineArrayList_.get(i).get(j).get(k).get(0) == idContaminedBy) { contains =
- * true; index = i; } k++; }
- * 
- * j++;
- * 
- * } i++;
- * 
- * } while (!contains && i < taille); // si jamais la bonne chaine est trouvée,
- * on finit de parcourir la chaine // actuelle, mais on ne parcours pas les
- * chaines suivantes
- * 
- * if (contains) { // rajouter le malade en fin de chaine
- * chaineArrayList_.get(index).add(creerNouveauMaladeArrayList(id,
- * dateContamined)); } }
- * 
- * }
- */
-/*
- * public void updateChaineLinkedList(String s) { String data[] =
- * getInformation(s); // data[0] = id, data[1]=dateContaminedBy, data[2] =
- * idContaminedBy
- * 
- * if (chaine_.size() == 0) { // la personne considérée est la première
- * contaminée } }
- * 
- * public ArrayList<ArrayList<Integer>> creerNouveauMaladeArrayList(Integer id,
- * Integer date) { ArrayList<ArrayList<Integer>> nouveauMalade = new
- * ArrayList<ArrayList<Integer>>(2);
- * 
- * nouveauMalade.add(new ArrayList<Integer>()); // id du malade
- * nouveauMalade.add(new ArrayList<Integer>()); // date pour laquelle il a été
- * malade nouveauMalade.get(0).add(id); nouveauMalade.get(1).add(date);
- * 
- * return nouveauMalade; }
- * 
- * public void creerNouvelleChaineArrayList(Integer id, Integer date) {
- * 
- * ArrayList<ArrayList<ArrayList<Integer>>> nouvelleChaineContamination = new
- * ArrayList<ArrayList<ArrayList<Integer>>>();
- * nouvelleChaineContamination.add(creerNouveauMaladeArrayList(id, date));
- * 
- * chaineArrayList_.add(nouvelleChaineContamination); }
- * 
- * public String[] getInformation(String s) {
- * 
- * 
- * return s.split(",");
- * 
- * }
- * 
- * public ArrayBlockingQueue<String> getReaderqueue() { return readerqueue_; }
- * 
- * public void setReaderqueue(ArrayBlockingQueue<String> readerqueue) {
- * this.readerqueue_ = readerqueue; }
- * 
- * public ArrayBlockingQueue<String> getWritterqueue() { return writterqueue_; }
- * 
- * public void setWritterqueue(ArrayBlockingQueue<String> writterqueue) {
- * this.writterqueue_ = writterqueue; }
- * 
- * public LinkedList<LinkedList<String>> getChaine() { return chaine_; }
- * 
- * public void setChaine(LinkedList<LinkedList<String>> chaine) { this.chaine_ =
- * chaine; }
- * 
- * public ArrayList<ArrayList<ArrayList<ArrayList<Integer>>>>
- * getChaineArrayList_() { return chaineArrayList_; }
- * 
- * public void
- * setChaineArrayList_(ArrayList<ArrayList<ArrayList<ArrayList<Integer>>>>
- * chaineArrayList_) { this.chaineArrayList_ = chaineArrayList_; } }
- */

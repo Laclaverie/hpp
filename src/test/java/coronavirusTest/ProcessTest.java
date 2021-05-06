@@ -23,9 +23,11 @@ public class ProcessTest {
 		
 		long[] m1 = {1,122555,150};
 		long[] m2 = {2,1225545,151};
+		long[] m3 = {3,111111,2};
 	
 		Malade M1=new Malade(m1);
 		Malade M2 = new Malade(m2);
+		Malade M3 = new Malade (m3);
 		
 		monP.updateChaine(m1);
 		assertEquals(1,monP.getChaine_().size()); // nombre de chaines de contamination
@@ -39,7 +41,17 @@ public class ProcessTest {
 		assertEquals(2, monP.getChaine_().size()); // nombre de chaines de contamination
 		assertEquals(2, monP.getChaine_().get(1).get(0).getId_()); // vérification que c'est le bon ID
 		assertEquals(151, monP.getChaine_().get(1).get(0).getIdContaminedBy_()); //Verification bon ID de contaminé
-		assertEquals(true,monP.getMap().containsKey(M1.getId_())); // vérification hashtable
+		assertEquals(true,monP.getMap().containsKey(M2.getId_())); // vérification hashtable
+		
+		monP.updateChaine(m3);
+		
+		assertEquals(2, monP.getChaine_().size()); // nombre de chaines de contamination
+		assertEquals(2, monP.getChaine_().get(1).get(0).getId_()); // vérification que c'est le bon ID
+		assertEquals(2, monP.getChaine_().get(1).get(1).getIdContaminedBy_()); //Verification bon ID de contaminé
+		assertEquals(true,monP.getMap().containsKey(M3.getId_())); // vérification hashtable
+		
+		
+	
 		
 		
 		
