@@ -48,12 +48,12 @@ public class Process {
 		} else { // deux cas : soit on trouve le contaminant soit on ne le trouve pas (et donc il
 					// y a un problème dans ce qui a été rentré
 
-			Integer chainNumber = map.get(m.getIdContaminedBy_());
+			Integer chainNumber = map.get(m.getIdContaminedBy_()); // recuperer le numéro de la chaine concernée
 			if (chainNumber == null) { // alors on n'a pas trouvé notre contaminant dans la table de hash
 				System.out.println(" La personne qui a pour ID : " + m.getIdContaminedBy_() + " qui a contaminé "
 						+ m.getId_()
 						+ " n'a pas été trouvée ! \n Une nouvelle chaine a été crée à partir de la personne d'ID : "
-						+ m.getId_() + " \nMerci de faire attention !");
+						+ m.getId_() + " \nMerci de faire attention à vous !");
 				chaine_.add(createNewChain(m));
 				map.put(m.getId_(), chaine_.size() - 1);
 				mapCountryChain_.put(m.getIdPays_(), chaine_.size() - 1);
@@ -62,17 +62,23 @@ public class Process {
 					chaine_.add(createNewChain(m));
 					map.put(m.getId_(), chaine_.size() - 1);
 					mapCountryChain_.put(m.getIdPays_(), chaine_.size() - 1);
-				}
-				else {
+				} else {
 					chaine_.get(chainNumber).add(m);
 					map.put(m.getId_(), chainNumber - 1);
 					mapCountryChain_.put(m.getIdPays_(), chainNumber - 1);
-					
+
 				}
 
 			}
 
 		}
+	}
+	public void findLargerChains() {
+		/**
+		 * Après avoir mis en place toutes les chaines, regarder quelles sont les plus longues
+		 */
+		
+		
 	}
 
 	public LinkedList<Malade> createNewChain(Malade m) {
