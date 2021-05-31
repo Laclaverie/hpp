@@ -20,11 +20,11 @@ public class Reader {
 
 	private ArrayBlockingQueue<long[]> readerqueue_;
 	private String directory_;
-	private Date fin_date_;
+	private int fin_date_;
 
 	// Constructor
 	
-	public Reader(Date date, ArrayBlockingQueue<long[]> readerqueue, String directory ){
+	public Reader(int date, ArrayBlockingQueue<long[]> readerqueue, String directory ){
 		
 		setReaderqueue_(readerqueue);
 		setDirectory_(directory);
@@ -56,45 +56,62 @@ public class Reader {
 			end_line[i] = (int) Files.lines(csv[i].toPath()).count();
 		}
 		
+		boolean flag = true;
+		boolean poison = true;
 		
 		
 		// Loop
 		
-		
-		
-		for (int i=0; i < csv.length;i++)
+		while (flag)
 		{
-			//System.out.println(csv[i]);
-			for (int j=0; j < csv.length;j++) {
-				if (end_line[j] == i_line[j])
-				{
-					i_line[j] = -1;
+			for (int i=0; i < csv.length;i++)
+			{
+				//System.out.println(csv[i]);
+				for (int j=0; j < csv.length;j++) {
+					if (end_line[j] == i_line[j])
+					{
+						i_line[j] = -1;
+					}
 				}
-			}
-			
-			for (int j=0; j < csv.length;j++) {
-				if (i_line[j] == -1)
+				
+				for (int j=0; j < csv.length;j++) {
+					if (i_line[j] == -1)
+					{
+						csv_line[j] = "none";
+					}
+					else
+					{
+						csv_line[j] = Read(i_line[j], csv[j].toString());
+					}	
+				}
+				
+				line_a_modif = Compare(csv_line, end_line, i_line);
+				//System.out.println(line_a_modif);
+				if (line_a_modif == -1)
 				{
-					csv_line[j] = "none";
+					for (int k = 0; k < i_line.length; k++) 
+					{
+						if (i_line[k] != -1)
+						{
+							poison = false;
+						}
+					}
+					
+					if (poison == true)
+					{
+						//envoie du colis piègé
+						flag = false;
+					}
+					poison = true;
 				}
 				else
 				{
-					csv_line[j] = Read(i_line[j], csv[j].toString());
-				}	
-			}
-			
-			line_a_modif = Compare(csv_line, end_line, i_line);
-			if (line_a_modif == -1)
-			{
-				//envoie du colis piègé 
-			}
-			else
-			{
-				Cut(csv_line[line_a_modif]);
-			}
-			
-			
-			
+					Cut(csv_line[line_a_modif], line_a_modif);
+					i_line[line_a_modif] ++;
+				}
+			}	
+				
+				
 		}
 	}
 	
@@ -116,26 +133,27 @@ public class Reader {
 	public int Compare(String t_line[], int end_line[], int i_line[]) throws ParseException
 	{
 		int modif = -1;
-		Date date[] = null;
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date mem_date = null;
+		long date[] = new long[t_line.length] ;
+		//SimpleDateFormat format = new SimpleDateFormat("sssssssss");
+		long mem_date = 0;
 		
 		for (int i=0; i < t_line.length; i++)
 		{
 			if (i_line[i] != -1)
 			{
-				String[] split = t_line[i].split(",");
-				date[i] = format.parse(split[3]);
-				if (fin_date_.compareTo(date[i]) < 0)
+				String[] split = t_line[i].split(", ");
+				String[] split_date = split[4].split("\\.");
+				date[i] = Long.valueOf(split_date[0]);
+				if (fin_date_ > date[i])
 				{
-					if (mem_date == null)
+					if (mem_date == 0)
 					{
 						mem_date = date[i];
 						modif = i;
 					}
 					else
 					{
-						if (mem_date.compareTo(date[i]) < 0)
+						if (mem_date > date[i])
 						{
 							mem_date = date[i];
 							modif = i;
@@ -153,19 +171,29 @@ public class Reader {
 		return modif;
 	}
 	
-	public void Cut(String line) {
+	public void Cut(String line, int pays) {
 		
 
 		String[] split = line.split(", ");
 		
-		String cut_line = split[0]+","+split[3]+","+split[4];
+		
+		String[] split_date = split[4].split("\\.");
+		String cut_line = split[0]+","+split_date[0]+","+split[5];
+		//long [] chaine = new long[4];
+		//chaine[0] = Long.valueOf(split[0]);
+		//chaine[1] = Long.valueOf(split_date[0]);
+		//chaine[2] = Long.valueOf(split[5]);
+		//chaine[3] = Long.valueOf(pays);
+		
+		//PutIntoQ(chaine);
+		System.out.println(cut_line);
 		
 		 
 	}
 	
 	public void PutIntoQ(long chaine[]) 
 	{
-		
+		//readerqueue_.add(chaine);
 	}
 	
 	
@@ -194,14 +222,14 @@ public class Reader {
 
 
 
-	public Date getFin_date_() {
+	public int getFin_date_() {
 		return fin_date_;
 	}
 
 
 
-	public void setFin_date_(Date calendar) {
-		this.fin_date_ = calendar;
+	public void setFin_date_(int date) {
+		this.fin_date_ = date;
 	}
 	
 }
