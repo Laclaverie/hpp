@@ -28,11 +28,11 @@ public class ProcessTest {
 		long[] m2 = {2,1225545,151,1};
 		long[] m3 = {3,111111,2,2};
 		long[] m4 = {4,122555,1,0};
-		long[] m5 = {5,1225545,2,1};
-		long[] m6 = {6,111111,2,2};
-		long[] m7 = {7,122555,1,0};
-		long[] m8 = {8,1225545,1,1};
-		long[] m9 = {9,111111,2,2};
+		long[] m5 = {5,1225547,2,1};
+		long[] m6 = {6,111112,2,2};
+		long[] m7 = {7,122556,1,0};
+		long[] m8 = {8,1225546,1,1};
+		long[] m9 = {9,111113,2,2};
 	
 		Malade M1=  new Malade(m1);
 		Malade M2 = new Malade(m2);
@@ -79,6 +79,7 @@ public class ProcessTest {
 		monP.updateChaine(m9);
 		
 		monP.findLargestChains();
+		monP.putIntoQueue();
 		
 	}
 }
