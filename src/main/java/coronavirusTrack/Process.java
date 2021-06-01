@@ -18,14 +18,17 @@ public class Process {
 	private LinkedList<LinkedList<Malade>> chaine_ = new LinkedList<>();
 	private HashMap<Long, Integer> map = new HashMap<Long, Integer>(); // <Id du malade,chaine associée>
 	private int[] three_largest_chains = new int[3];
+	private long[] chainScore;
+	long date_ =0;
 
-	public Process(ArrayBlockingQueue<long[]> readerqueue, ArrayBlockingQueue<long[]> writterqueue) {
+	public Process(ArrayBlockingQueue<long[]> readerqueue, ArrayBlockingQueue<long[]> writterqueue,long date) {
 		/**
 		 * Dans la HashMap <ID de la personne infectée, ID de la première personne de la
 		 * chaine>
 		 */
 		this.setReaderqueue_(readerqueue);
 		this.setWritterqueue_(writterqueue);
+		this.date_=date;
 	}
 
 	public void parseQueue() {
@@ -33,14 +36,10 @@ public class Process {
 	}
 
 	public void putIntoQueue() {
-
-		for (int i = 0; i < three_largest_chains.length; i++) {
-			System.out.println("Nouvelle data ");
-			for (int j=0;j<3;j++) {
-				System.out.println(DataToQueue(i)[j]);
-			}
-		}
-
+		findScoreOfAllChains();
+		int maxIndex= getIndexOfLargest(chainScore);
+		/***************** les 3 plus grosses chaines **************/
+		
 	}
 
 	public void updateChaine(long[] data) {
@@ -67,10 +66,10 @@ public class Process {
 					chaine_.add(createNewChain(m));
 					map.put(m.getId_(), chaine_.size() - 1);
 				} else {
-					if (chaine_.get(chainNumber).size() >= 2) { // on met à jour le score
-						int beforeLast = chaine_.get(chainNumber).size() - 2;
-						m.setScore_(setScoreDate(m.getDateContamined_(),
-								chaine_.get(chainNumber).get(beforeLast).getDateContamined_()));
+					if (chaine_.get(chainNumber).size() >= 1) { // on met à jour le score
+					//	int beforeLast = chaine_.get(chainNumber).size() - 2;
+						m.setScore_(setScoreDate(m.getDateContamined_(),date_));
+							//	chaine_.get(chainNumber).get(beforeLast).getDateContamined_())); V1
 					}
 					chaine_.get(chainNumber).add(m);
 					map.put(m.getId_(), chainNumber);
@@ -82,7 +81,7 @@ public class Process {
 		}
 	}
 
-	public void findLargestChains() { // plus longue chaine
+	public void findLargestChains() { // plus longue chaine V1 : n'est pas utile ici
 		/**
 		 * Après avoir mis en place toutes les chaines, regarder quelles sont les plus
 		 * longues map contient <id du malade, chaine pour laquelle il appartient>
@@ -103,17 +102,26 @@ public class Process {
 		}
 
 	}
+	public void findScoreOfAllChains() {
+		setChainScore(new long[chaine_.size()]);
+		for (int i=0;i<chaine_.size();i++) {
+			chainScore[i]= countScoreInAChain(i);
+		}
+	}
 
 	public long setScoreDate(long date1, long date2) {
 		if (Math.abs(date1 - date2) > 604800 && Math.abs(date1 - date2) <= 1209600) {
 			// we set the score at 4
+			System.out.println("retourne 4");
 			return 4;
 		} else {
 			// if this date is more than 14 days (exclusive)
 			if (Math.abs(date1 - date2) > 1209600) {
+				System.out.println(" retourne 0");
 				return 0;
 			}
 		}
+		System.out.println("retourne 10");
 		return 10;
 
 	}
@@ -129,8 +137,19 @@ public class Process {
 		}
 		return largest; // position of the first largest found
 	}
+	public int getIndexOfLargest(long[] array) {
+		if (array == null || array.length == 0)
+			return -1; // null or empty
 
-	public long countScoreInAChain(int index) {
+		int largest = 0;
+		for (int i = 1; i < array.length; i++) {
+			if (array[i] > array[largest])
+				largest = i;
+		}
+		return largest; // position of the first largest found
+	}
+
+	public long countScoreInAChain(int index) { // version : on compare le patient t avec le t-1
 		/**
 		 * compter le score d'une chaine à partir de l'index de celle-ci
 		 */
@@ -159,7 +178,8 @@ public class Process {
 		/******************************
 		 * A AVANCER ICI
 		 *****************************************************************/
-		dataToSend[2] = countScoreInAChain(index);
+		//dataToSend[2] = countScoreInAChain(index); // C'est la V1 ! score ~ patient t & patient t-1
+		dataToSend[2]=0; // C'est la V2 : score ~patient t->dateDeContamination & date ACTUELLE
 		return dataToSend;
 
 	}
@@ -200,6 +220,14 @@ public class Process {
 
 	public void setMap(HashMap<Long, Integer> map) {
 		this.map = map;
+	}
+
+	public long[] getChainScore() {
+		return chainScore;
+	}
+
+	public void setChainScore(long[] chainScore) {
+		this.chainScore = chainScore;
 	}
 
 }
