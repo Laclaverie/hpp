@@ -37,7 +37,17 @@ public class Process {
 
 	public void putIntoQueue() {
 		findScoreOfAllChains();
-		int maxIndex= getIndexOfLargest(chainScore);
+		
+		for (int i=0;i<3;i++) {
+			int maxIndex= getIndexOfLargest(chainScore);
+			long [] datatoQueue=DataToQueue(maxIndex);
+			chainScore[maxIndex]=-1; // enlever le score le plus élevé
+			System.out.println("data to send ");
+			for(int j=0;j<3;j++) {
+				System.out.println(datatoQueue[j]);
+			}
+		}
+		
 		/***************** les 3 plus grosses chaines **************/
 		
 	}
@@ -179,7 +189,7 @@ public class Process {
 		 * A AVANCER ICI
 		 *****************************************************************/
 		//dataToSend[2] = countScoreInAChain(index); // C'est la V1 ! score ~ patient t & patient t-1
-		dataToSend[2]=0; // C'est la V2 : score ~patient t->dateDeContamination & date ACTUELLE
+		dataToSend[2]= countScoreInAChain(index); // C'est la V2 : score ~patient t->dateDeContamination & date ACTUELLE
 		return dataToSend;
 
 	}
