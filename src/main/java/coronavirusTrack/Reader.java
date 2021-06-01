@@ -20,11 +20,11 @@ public class Reader {
 
 	private ArrayBlockingQueue<long[]> readerqueue_;
 	private String directory_;
-	private int fin_date_;
+	private long fin_date_;
 
 	// Constructor
 	
-	public Reader(int date, ArrayBlockingQueue<long[]> readerqueue, String directory ){
+	public Reader(long date, ArrayBlockingQueue<long[]> readerqueue, String directory ){
 		
 		setReaderqueue_(readerqueue);
 		setDirectory_(directory);
@@ -175,16 +175,24 @@ public class Reader {
 		
 
 		String[] split = line.split(", ");
-		
+		long tmp;
 		
 		String[] split_date = split[4].split("\\.");
-		String cut_line = split[0]+","+split_date[0]+","+split[5];
-		//long [] chaine = new long[4];
-		//chaine[0] = Long.valueOf(split[0]);
-		//chaine[1] = Long.valueOf(split_date[0]);
-		//chaine[2] = Long.valueOf(split[5]);
-		//chaine[3] = Long.valueOf(pays);
 		
+		long [] chaine = new long[4];
+		chaine[0] = Long.valueOf(split[0]);
+		chaine[1] = Long.valueOf(split_date[0]);
+		if (split[5].equals("unknown"))
+		{
+			tmp = -1;
+		}
+		else
+		{
+			tmp = Long.valueOf(split[5]);
+		}
+		chaine[2] = tmp;
+		chaine[3] = Long.valueOf(pays);
+		String cut_line = split[0]+","+split_date[0]+","+tmp+","+pays;
 		//PutIntoQ(chaine);
 		System.out.println(cut_line);
 		
@@ -222,13 +230,13 @@ public class Reader {
 
 
 
-	public int getFin_date_() {
+	public long getFin_date_() {
 		return fin_date_;
 	}
 
 
 
-	public void setFin_date_(int date) {
+	public void setFin_date_(long date) {
 		this.fin_date_ = date;
 	}
 	

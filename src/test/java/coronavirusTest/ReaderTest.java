@@ -21,11 +21,11 @@ public class ReaderTest {
 	@Test
 	public void test() throws ParseException, IOException {
 		File p = new File(".");
-		String path = p.getAbsolutePath()+"/csv/20";
+		String path = p.getAbsolutePath()+"/csv/1000000";
 		//DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		//Date date = format.parse("2020-01-30");
 		ArrayBlockingQueue<long[]> readerqueue_=new ArrayBlockingQueue<long[]>(20); // non utilisé dans un premier temps
-		int date = 1587769422;
+		long date = 1589238000;
 
 		Reader monR =new Reader(date,readerqueue_,path);
 		
