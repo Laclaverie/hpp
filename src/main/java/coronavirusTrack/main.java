@@ -19,6 +19,7 @@ public class main {
 		HashMap<Long, Integer> map_=new HashMap<Long,Integer>();
 		LinkedList<LinkedList<Malade>> chaine = new LinkedList<>() ;
 		HashMap<Integer,Long> chainCountyMap=new HashMap<Integer,Long>();
+		HashMap<Integer, Integer> chainIdPtr=new HashMap<Integer,Integer>();
 		
 		long date = 1589238000;
 		File p = new File(".");
@@ -28,8 +29,10 @@ public class main {
 		
 		service.execute(new Reader(date, readerQueue, path));
 		
-		service.execute(new Process(readerQueue, writterQueue, date,map_,chaine,chainCountyMap));
-		// service.execute(new Process(readerQueue, writterQueue, date,map_,chaine,chainCountyMap));
+		service.execute(new Process(readerQueue, writterQueue, date,map_,chaine,chainCountyMap,chainIdPtr));
+		service.execute(new Process(readerQueue, writterQueue, date,map_,chaine,chainCountyMap,chainIdPtr));
+
+		
 		shutdownAndAwaitTermination(service);
 		System.out.println(" fin ");
 	}

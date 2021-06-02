@@ -20,7 +20,8 @@ public class Process implements Runnable {
 	private ArrayBlockingQueue<long[]> writterqueue_; // non utilisé dans un premier temps
 	private LinkedList<LinkedList<Malade>> chaine_;
 	private HashMap<Long, Integer> map; // <Id du malade,chaine associée>
-	private HashMap<Integer, Long> chainCountyMap;
+	private HashMap<Integer, Long> chainCountyMap; // <id de la chaine, id du pays> 
+	private HashMap<Integer, Integer> chainIdPtr;	//< id de la chaine, pointeur vers la chaine>
 	private int[] three_largest_chains = new int[3];
 	private long[] chainScore;
 	long date_ = 0;
@@ -32,7 +33,8 @@ public class Process implements Runnable {
 
 	public Process(ArrayBlockingQueue<long[]> readerqueue, ArrayBlockingQueue<long[]> writterqueue, long date,
 			HashMap<Long, Integer> map_, LinkedList<LinkedList<Malade>> chaine,
-			HashMap<Integer, Long> chainCountyMap_) {
+			HashMap<Integer, Long> chainCountyMap_,
+			HashMap<Integer, Integer> chainIdPtr_) {
 		/**
 		 * Dans la HashMap <ID de la personne infectée, ID de la première personne de la
 		 * chaine>
@@ -43,6 +45,7 @@ public class Process implements Runnable {
 		this.map = map_;
 		this.chaine_ = chaine;
 		this.setChainCountyMap(chainCountyMap_);
+		this.setChainIdPtr(chainIdPtr_);
 	}
 
 	@Override
@@ -304,6 +307,14 @@ public class Process implements Runnable {
 
 	public void setChainCountyMap(HashMap<Integer, Long> chainCountyMap) {
 		this.chainCountyMap = chainCountyMap;
+	}
+
+	public HashMap<Integer, Integer> getChainIdPtr() {
+		return chainIdPtr;
+	}
+
+	public void setChainIdPtr(HashMap<Integer, Integer> chainIdPtr) {
+		this.chainIdPtr = chainIdPtr;
 	}
 
 }
