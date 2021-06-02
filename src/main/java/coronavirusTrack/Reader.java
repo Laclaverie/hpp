@@ -17,12 +17,13 @@ import java.util.Locale;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.stream.Stream;
 
-public class Reader {
+public class Reader implements Runnable {
 
 	private ArrayBlockingQueue<long[]> readerqueue_;
 	private String directory_;
 	private long fin_date_;
 	private Scanner[] scan_tab_;
+	private boolean POISON_PILL=false;
 
 	// Constructor
 	
@@ -36,7 +37,19 @@ public class Reader {
 	
 	// Functions
 	
-	
+	@Override
+	public void run() {
+		try {
+			Search();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public void Search() throws ParseException, IOException {
 		// ----
@@ -110,6 +123,9 @@ public class Reader {
 					{
 						//envoie du colis piègé
 						flag = false;
+						POISON_PILL=true;
+						long[] poisonPILL= {-1,-1,-1};
+						PutIntoQ(poisonPILL);
 					}
 					poison = true;
 				}
@@ -224,9 +240,9 @@ public class Reader {
 		}
 		chaine[2] = tmp;
 		chaine[3] = Long.valueOf(pays);
-		String cut_line = split[0]+","+split_date[0]+","+tmp+","+pays;
-		//PutIntoQ(chaine);
-		System.out.println(cut_line);
+		//String cut_line = split[0]+","+split_date[0]+","+tmp+","+pays;
+		PutIntoQ(chaine);
+		//System.out.println(cut_line);
 		
 		 
 	}
@@ -234,6 +250,14 @@ public class Reader {
 	public void PutIntoQ(long chaine[]) 
 	{
 		//readerqueue_.add(chaine);
+		try {
+			readerqueue_.put(chaine);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 	
 	

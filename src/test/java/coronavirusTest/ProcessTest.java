@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.junit.Test;
@@ -20,10 +22,13 @@ public class ProcessTest {
 																						// temps
 		ArrayBlockingQueue<long[]> writterqueue_ = new ArrayBlockingQueue<long[]>(20); // non utilisé dans un premier
 																						// temps
+		HashMap<Integer,Long> chainCountyMap=new HashMap<Integer,Long>();
 		long date = 1587417223;
+		HashMap<Long, Integer> map_=new HashMap<Long,Integer>();
+		LinkedList<LinkedList<Malade>> chaine = new LinkedList<>() ;
 		// --- get information --- 
-		Process monP = new Process(readerqueue_, writterqueue_,date);
-		Process monP2 = new Process(readerqueue_, writterqueue_,date);
+		Process monP = new Process(readerqueue_, writterqueue_,date,map_,chaine,chainCountyMap);
+		Process monP2 = new Process(readerqueue_, writterqueue_,date,map_,chaine,chainCountyMap);
 		
 		long[] m1 = {1,1582161158,150,0};
 		long[] m2 = {2,1583091884,151,1};

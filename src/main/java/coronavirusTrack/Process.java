@@ -11,79 +11,126 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class Process {
+public class Process implements Runnable {
 	private ArrayBlockingQueue<long[]> readerqueue_; // non utilisé dans un premier temps
 	private ArrayBlockingQueue<long[]> writterqueue_; // non utilisé dans un premier temps
-	private LinkedList<LinkedList<Malade>> chaine_ = new LinkedList<>();
-	private HashMap<Long, Integer> map = new HashMap<Long, Integer>(); // <Id du malade,chaine associée>
+	private LinkedList<LinkedList<Malade>> chaine_;
+	private HashMap<Long, Integer> map; // <Id du malade,chaine associée>
+	private HashMap<Integer, Long> chainCountyMap;
 	private int[] three_largest_chains = new int[3];
 	private long[] chainScore;
-	long date_ =0;
+	long date_ = 0;
 
-	public Process(ArrayBlockingQueue<long[]> readerqueue, ArrayBlockingQueue<long[]> writterqueue,long date) {
+	// utilitaire
+	ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+	Lock readLock = readWriteLock.readLock();
+	Lock writeLock = readWriteLock.writeLock();
+
+	public Process(ArrayBlockingQueue<long[]> readerqueue, ArrayBlockingQueue<long[]> writterqueue, long date,
+			HashMap<Long, Integer> map_, LinkedList<LinkedList<Malade>> chaine,
+			HashMap<Integer, Long> chainCountyMap_) {
 		/**
 		 * Dans la HashMap <ID de la personne infectée, ID de la première personne de la
 		 * chaine>
 		 */
 		this.setReaderqueue_(readerqueue);
 		this.setWritterqueue_(writterqueue);
-		this.date_=date;
+		this.date_ = date;
+		this.map = map_;
+		this.chaine_ = chaine;
+		this.setChainCountyMap(chainCountyMap_);
+	}
+
+	@Override
+	public void run() {
+		parseQueue();
+		putIntoQueue();
+
 	}
 
 	public void parseQueue() {
+		boolean stop = false;
+		do {
+			try {
+				long[] data = readerqueue_.take();
+				if (isPOISON_PILL(data)) {
+					readerqueue_.put(data);
+					stop = true;
+				} else {
+					updateChaine(data);
+				}
 
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} while (!stop);
 	}
 
 	public void putIntoQueue() {
-		findScoreOfAllChains();
-		
-		for (int i=0;i<3;i++) {
-			int maxIndex= getIndexOfLargest(chainScore);
-			long [] datatoQueue=DataToQueue(maxIndex);
-			chainScore[maxIndex]=-1; // enlever le score le plus élevé
-			System.out.println("data to send ");
-			for(int j=0;j<3;j++) {
-				System.out.println(datatoQueue[j]);
-			}
-		}
-		
-		/***************** les 3 plus grosses chaines **************/
-		
+		/*
+		 * findScoreOfAllChains();
+		 * 
+		 * for (int i=0;i<3;i++) { int maxIndex= getIndexOfLargest(chainScore); long []
+		 * datatoQueue=DataToQueue(maxIndex); chainScore[maxIndex]=-1; // enlever le
+		 * score le plus élevé System.out.println("data to send "); for(int j=0;j<3;j++)
+		 * { System.out.println(datatoQueue[j]); } try { writterqueue_.put(datatoQueue);
+		 * } catch (InterruptedException e) { e.printStackTrace(); } }
+		 * 
+		 */
+		System.out.println(" finiiiiiiiiiiiiiiiii");
 	}
 
 	public void updateChaine(long[] data) {
 		Malade m = new Malade(data);
+		// m.printMalade();
+		int chaineSize = chaine_.size(); // pas besoin de le calculer plusieurs fois
 		Boolean testUnkow = (m.getIdContaminedBy_() == -1);
-		Boolean testSize = (chaine_.size() == 0);
+		Boolean testSize = (chaineSize == 0);
 		if (testUnkow || testSize) { // créer une nouvelle chaine de contamination
+			// System.out.println("nb de chaines = "+chaine_.size());
+			System.out.println("Id du malade = " + m.getId_());
+			readLock.lock();
 			chaine_.add(createNewChain(m));
-			map.put(m.getId_(), chaine_.size() - 1);
+			map.put(m.getId_(), chaineSize);
+			chainCountyMap.put(chaineSize, m.getIdPays_());
+			readLock.unlock();
 
 		} else { // deux cas : soit on trouve le contaminant soit on ne le trouve pas (et donc il
 					// y a un problème dans ce qui a été rentré
 
 			Integer chainNumber = map.get(m.getIdContaminedBy_()); // recuperer le numéro de la chaine concernée
 			if (chainNumber == null) { // alors on n'a pas trouvé notre contaminant dans la table de hash
-				System.out.println(" La personne qui a pour ID : " + m.getIdContaminedBy_() + " qui a contaminé "
-						+ m.getId_()
-						+ " n'a pas été trouvée ! \n Une nouvelle chaine a été crée à partir de la personne d'ID : "
-						+ m.getId_() + " \nMerci de faire attention à vous !");
+				/*
+				 * System.out.println(" La personne qui a pour ID : " + m.getIdContaminedBy_() +
+				 * " qui a contaminé " + m.getId_() +
+				 * " n'a pas été trouvée ! \n Une nouvelle chaine a été crée à partir de la personne d'ID : "
+				 * + m.getId_() + " \nMerci de faire attention à vous !");
+				 */
+				readLock.lock();
 				chaine_.add(createNewChain(m));
-				map.put(m.getId_(), chaine_.size() - 1);
+				map.put(m.getId_(), chaineSize);
+				chainCountyMap.put(chaineSize, m.getIdPays_());
+				readLock.unlock();
 			} else {
-				if (m.getIdPays_() != chaine_.get(chainNumber).get(0).getIdPays_()) {
+				if (m.getIdPays_() != chainCountyMap.get(chainNumber)) {
+					readLock.lock();
 					chaine_.add(createNewChain(m));
-					map.put(m.getId_(), chaine_.size() - 1);
+					map.put(m.getId_(), chaineSize);
+					chainCountyMap.put(chaineSize, m.getIdPays_());
+					readLock.unlock();
 				} else {
-					if (chaine_.get(chainNumber).size() >= 1) { // on met à jour le score
-					//	int beforeLast = chaine_.get(chainNumber).size() - 2;
-						m.setScore_(setScoreDate(m.getDateContamined_(),date_));
-							//	chaine_.get(chainNumber).get(beforeLast).getDateContamined_())); V1
-					}
+					m.setScore_(setScoreDate(m.getDateContamined_(), date_));
+					readLock.lock();
 					chaine_.get(chainNumber).add(m);
 					map.put(m.getId_(), chainNumber);
-
+					chainCountyMap.put(chainNumber, m.getIdPays_());
+					readLock.unlock();
+				
 				}
 
 			}
@@ -108,30 +155,31 @@ public class Process {
 			int index = getIndexOfLargest(occurrence);
 			three_largest_chains[i] = index;
 			occurrence[index] = 0;
-			System.out.println(" max index : " + index);
+			// System.out.println(" max index : " + index);
 		}
 
 	}
+
 	public void findScoreOfAllChains() {
 		setChainScore(new long[chaine_.size()]);
-		for (int i=0;i<chaine_.size();i++) {
-			chainScore[i]= countScoreInAChain(i);
+		for (int i = 0; i < chaine_.size(); i++) {
+			chainScore[i] = countScoreInAChain(i);
 		}
 	}
 
 	public long setScoreDate(long date1, long date2) {
 		if (Math.abs(date1 - date2) > 604800 && Math.abs(date1 - date2) <= 1209600) {
 			// we set the score at 4
-			System.out.println("retourne 4");
+			// System.out.println("retourne 4");
 			return 4;
 		} else {
 			// if this date is more than 14 days (exclusive)
 			if (Math.abs(date1 - date2) > 1209600) {
-				System.out.println(" retourne 0");
+				// System.out.println(" retourne 0");
 				return 0;
 			}
 		}
-		System.out.println("retourne 10");
+		// System.out.println("retourne 10");
 		return 10;
 
 	}
@@ -147,6 +195,7 @@ public class Process {
 		}
 		return largest; // position of the first largest found
 	}
+
 	public int getIndexOfLargest(long[] array) {
 		if (array == null || array.length == 0)
 			return -1; // null or empty
@@ -168,7 +217,7 @@ public class Process {
 		while (it.hasNext()) {
 			score = score + it.next().getScore_();
 		}
-	//	System.out.println("score =" + score + " index = "+index);
+		// System.out.println("score =" + score + " index = "+index);
 		return score;
 	}
 
@@ -188,8 +237,10 @@ public class Process {
 		/******************************
 		 * A AVANCER ICI
 		 *****************************************************************/
-		//dataToSend[2] = countScoreInAChain(index); // C'est la V1 ! score ~ patient t & patient t-1
-		dataToSend[2]= countScoreInAChain(index); // C'est la V2 : score ~patient t->dateDeContamination & date ACTUELLE
+		// dataToSend[2] = countScoreInAChain(index); // C'est la V1 ! score ~ patient t
+		// & patient t-1
+		dataToSend[2] = countScoreInAChain(index); // C'est la V2 : score ~patient t->dateDeContamination & date
+													// ACTUELLE
 		return dataToSend;
 
 	}
@@ -198,6 +249,13 @@ public class Process {
 		LinkedList<Malade> newChain = new LinkedList<Malade>();
 		newChain.add(m);
 		return newChain;
+	}
+
+	public boolean isPOISON_PILL(long[] data) {
+		if (data[0] == -1 && data[1] == -1 && data[2] == -1) {
+			return true;
+		}
+		return false;
 	}
 
 	public LinkedList<LinkedList<Malade>> getChaine_() {
@@ -238,6 +296,14 @@ public class Process {
 
 	public void setChainScore(long[] chainScore) {
 		this.chainScore = chainScore;
+	}
+
+	public HashMap<Integer, Long> getChainCountyMap() {
+		return chainCountyMap;
+	}
+
+	public void setChainCountyMap(HashMap<Integer, Long> chainCountyMap) {
+		this.chainCountyMap = chainCountyMap;
 	}
 
 }

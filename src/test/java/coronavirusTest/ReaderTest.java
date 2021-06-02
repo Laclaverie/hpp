@@ -36,7 +36,7 @@ public class ReaderTest {
 		//assertEquals("13,1976-03-12 00:00:00,1587417223.6139328", test2);
 		
 		System.out.println("Test Ultime");
-		System.out.println("Test en cour ...");
+		System.out.println("Test en cours ...");
 		
 		monR.Search();
 		
