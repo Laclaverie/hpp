@@ -20,8 +20,7 @@ public class Process implements Runnable {
 	private ArrayBlockingQueue<long[]> writterqueue_; // non utilisé dans un premier temps
 	private LinkedList<LinkedList<Malade>> chaine_;
 	private HashMap<Long, Integer> map; // <Id du malade,chaine associée>
-	private HashMap<Integer, Long> chainCountyMap; // <id de la chaine, id du pays> 
-	private HashMap<Integer, Integer> chainIdPtr;	//< id de la chaine, pointeur vers la chaine>
+	private HashMap<Integer, Long> chainCountyMap; // <id de la chaine, id du pays>
 	private HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList;
 	private int[] three_largest_chains = new int[3];
 	private long[] chainScore;
@@ -33,11 +32,8 @@ public class Process implements Runnable {
 	Lock writeLock = readWriteLock.writeLock();
 
 	public Process(ArrayBlockingQueue<long[]> readerqueue, ArrayBlockingQueue<long[]> writterqueue, long date,
-			HashMap<Long, Integer> map_, LinkedList<LinkedList<Malade>> chaine,
-			HashMap<Integer, Long> chainCountyMap_,
-			HashMap<Integer, Integer> chainIdPtr_,
-			HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList_
-			) {
+			HashMap<Long, Integer> map_, LinkedList<LinkedList<Malade>> chaine, HashMap<Integer, Long> chainCountyMap_,
+			HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList_) {
 		/**
 		 * Dans la HashMap <ID de la personne infectée, ID de la première personne de la
 		 * chaine>
@@ -48,7 +44,6 @@ public class Process implements Runnable {
 		this.map = map_;
 		this.chaine_ = chaine;
 		this.setChainCountyMap(chainCountyMap_);
-		this.setChainIdPtr(chainIdPtr_);
 		this.setChainIndexLinkedList(chainIndexLinkedList_);
 	}
 
@@ -79,17 +74,20 @@ public class Process implements Runnable {
 	}
 
 	public void putIntoQueue() {
-		/*
-		 * findScoreOfAllChains();
-		 * 
-		 * for (int i=0;i<3;i++) { int maxIndex= getIndexOfLargest(chainScore); long []
-		 * datatoQueue=DataToQueue(maxIndex); chainScore[maxIndex]=-1; // enlever le
-		 * score le plus élevé System.out.println("data to send "); for(int j=0;j<3;j++)
-		 * { System.out.println(datatoQueue[j]); } try { writterqueue_.put(datatoQueue);
-		 * } catch (InterruptedException e) { e.printStackTrace(); } }
-		 * 
-		 */
-		System.out.println(" finiiiiiiiiiiiiiiiii");
+
+		findScoreOfAllChains();
+
+		for (int i = 0; i < 3; i++) {
+			int maxIndex = getIndexOfLargest(chainScore);
+			long[] datatoQueue = DataToQueue(maxIndex);
+			chainScore[maxIndex] = -1; // enlever le score le plus élevé
+			try {
+				writterqueue_.put(datatoQueue);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		// System.out.println(" finiiiiiiiiiiiiiiiii");
 	}
 
 	public void updateChaine(long[] data) {
@@ -105,7 +103,7 @@ public class Process implements Runnable {
 			chaine_.add(createNewChain(m));
 			map.put(m.getId_(), chaineSize);
 			chainCountyMap.put(chaineSize, m.getIdPays_());
-			chainIndexLinkedList.put(chaineSize,createNewChain(m));
+			chainIndexLinkedList.put(chaineSize, createNewChain(m));
 			readLock.unlock();
 
 		} else { // deux cas : soit on trouve le contaminant soit on ne le trouve pas (et donc il
@@ -134,15 +132,15 @@ public class Process implements Runnable {
 					chainIndexLinkedList.put(chaineSize, createNewChain(m));
 
 					readLock.unlock();
-				} else { //update une chaine
+				} else { // update une chaine
 					m.setScore_(setScoreDate(m.getDateContamined_(), date_));
 					readLock.lock();
-					//chaine_.get(chainNumber).add(m);
+					// chaine_.get(chainNumber).add(m);
 					chainIndexLinkedList.get(chainNumber).add(m);
 					map.put(m.getId_(), chainNumber);
 					chainCountyMap.put(chainNumber, m.getIdPays_());
 					readLock.unlock();
-				
+
 				}
 
 			}
@@ -316,14 +314,6 @@ public class Process implements Runnable {
 
 	public void setChainCountyMap(HashMap<Integer, Long> chainCountyMap) {
 		this.chainCountyMap = chainCountyMap;
-	}
-
-	public HashMap<Integer, Integer> getChainIdPtr() {
-		return chainIdPtr;
-	}
-
-	public void setChainIdPtr(HashMap<Integer, Integer> chainIdPtr) {
-		this.chainIdPtr = chainIdPtr;
 	}
 
 	public HashMap<Integer, LinkedList<Malade>> getChainIndexLinkedList() {
