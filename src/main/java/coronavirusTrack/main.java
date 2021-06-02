@@ -20,17 +20,18 @@ public class main {
 		LinkedList<LinkedList<Malade>> chaine = new LinkedList<>() ;
 		HashMap<Integer,Long> chainCountyMap=new HashMap<Integer,Long>();
 		HashMap<Integer, Integer> chainIdPtr=new HashMap<Integer,Integer>();
+		HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList=new HashMap<Integer, LinkedList<Malade>>();
 		
 		long date = 1589238000;
 		File p = new File(".");
 		String path = p.getAbsolutePath()+"/csv/1000000";
-		System.out.println(" début ");
+		System.out.println("début ");
 		ExecutorService service = Executors.newFixedThreadPool(numberofThread);
 		
 		service.execute(new Reader(date, readerQueue, path));
-		
-		service.execute(new Process(readerQueue, writterQueue, date,map_,chaine,chainCountyMap,chainIdPtr));
-		service.execute(new Process(readerQueue, writterQueue, date,map_,chaine,chainCountyMap,chainIdPtr));
+		for(int i=0;i<1;i++) {
+			service.execute(new Process(readerQueue, writterQueue, date,map_,chaine,chainCountyMap,chainIdPtr,chainIndexLinkedList));
+		}
 
 		
 		shutdownAndAwaitTermination(service);

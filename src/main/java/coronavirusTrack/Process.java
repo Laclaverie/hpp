@@ -22,6 +22,7 @@ public class Process implements Runnable {
 	private HashMap<Long, Integer> map; // <Id du malade,chaine associée>
 	private HashMap<Integer, Long> chainCountyMap; // <id de la chaine, id du pays> 
 	private HashMap<Integer, Integer> chainIdPtr;	//< id de la chaine, pointeur vers la chaine>
+	private HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList;
 	private int[] three_largest_chains = new int[3];
 	private long[] chainScore;
 	long date_ = 0;
@@ -34,7 +35,9 @@ public class Process implements Runnable {
 	public Process(ArrayBlockingQueue<long[]> readerqueue, ArrayBlockingQueue<long[]> writterqueue, long date,
 			HashMap<Long, Integer> map_, LinkedList<LinkedList<Malade>> chaine,
 			HashMap<Integer, Long> chainCountyMap_,
-			HashMap<Integer, Integer> chainIdPtr_) {
+			HashMap<Integer, Integer> chainIdPtr_,
+			HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList_
+			) {
 		/**
 		 * Dans la HashMap <ID de la personne infectée, ID de la première personne de la
 		 * chaine>
@@ -46,6 +49,7 @@ public class Process implements Runnable {
 		this.chaine_ = chaine;
 		this.setChainCountyMap(chainCountyMap_);
 		this.setChainIdPtr(chainIdPtr_);
+		this.setChainIndexLinkedList(chainIndexLinkedList_);
 	}
 
 	@Override
@@ -94,13 +98,14 @@ public class Process implements Runnable {
 		int chaineSize = chaine_.size(); // pas besoin de le calculer plusieurs fois
 		Boolean testUnkow = (m.getIdContaminedBy_() == -1);
 		Boolean testSize = (chaineSize == 0);
-		if (testUnkow || testSize) { // créer une nouvelle chaine de contamination
+		if (testUnkow || testSize) { // créer une nouvelle chaine de contamination car vide ou contaminant inconnu
 			// System.out.println("nb de chaines = "+chaine_.size());
 			System.out.println("Id du malade = " + m.getId_());
 			readLock.lock();
 			chaine_.add(createNewChain(m));
 			map.put(m.getId_(), chaineSize);
 			chainCountyMap.put(chaineSize, m.getIdPays_());
+			chainIndexLinkedList.put(chaineSize,createNewChain(m));
 			readLock.unlock();
 
 		} else { // deux cas : soit on trouve le contaminant soit on ne le trouve pas (et donc il
@@ -118,18 +123,22 @@ public class Process implements Runnable {
 				chaine_.add(createNewChain(m));
 				map.put(m.getId_(), chaineSize);
 				chainCountyMap.put(chaineSize, m.getIdPays_());
+				chainIndexLinkedList.put(chaineSize, createNewChain(m));
 				readLock.unlock();
-			} else {
+			} else { // créé une chaine
 				if (m.getIdPays_() != chainCountyMap.get(chainNumber)) {
 					readLock.lock();
 					chaine_.add(createNewChain(m));
 					map.put(m.getId_(), chaineSize);
 					chainCountyMap.put(chaineSize, m.getIdPays_());
+					chainIndexLinkedList.put(chaineSize, createNewChain(m));
+
 					readLock.unlock();
-				} else {
+				} else { //update une chaine
 					m.setScore_(setScoreDate(m.getDateContamined_(), date_));
 					readLock.lock();
-					chaine_.get(chainNumber).add(m);
+					//chaine_.get(chainNumber).add(m);
+					chainIndexLinkedList.get(chainNumber).add(m);
 					map.put(m.getId_(), chainNumber);
 					chainCountyMap.put(chainNumber, m.getIdPays_());
 					readLock.unlock();
@@ -315,6 +324,14 @@ public class Process implements Runnable {
 
 	public void setChainIdPtr(HashMap<Integer, Integer> chainIdPtr) {
 		this.chainIdPtr = chainIdPtr;
+	}
+
+	public HashMap<Integer, LinkedList<Malade>> getChainIndexLinkedList() {
+		return chainIndexLinkedList;
+	}
+
+	public void setChainIndexLinkedList(HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList) {
+		this.chainIndexLinkedList = chainIndexLinkedList;
 	}
 
 }
