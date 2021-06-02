@@ -6,7 +6,6 @@ public class Malade {
 	private long dateContamined_;
 	private long idContaminedBy_;
 	private long idPays_;
-	private long score_=0;
 	public Malade(long []data) {
 		setId_(data[0]);
 		setDateContamined_(data[1]);
@@ -41,12 +40,6 @@ public class Malade {
 	}
 	public void setIdPays_(long idPays_) {
 		this.idPays_ = idPays_;
-	}
-	public long getScore_() {
-		return score_;
-	}
-	public void setScore_(long score_) {
-		this.score_ = score_;
 	}
 }
  

@@ -74,7 +74,6 @@ public class Process implements Runnable {
 				}
 
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} while (!stop);
@@ -86,6 +85,15 @@ public class Process implements Runnable {
 		findScoreOfAllChains();
 		System.out.println("score ok");
 
+		for (int i = 0; i < 3; i++) {
+			int maxIndex = getIndexOfLargest(chainScore);
+			long[] datatoQueue = DataToQueue(maxIndex);
+			chainScore[maxIndex] = -1; // enlever le score le plus élevé
+			System.out.println("data :");
+			for (int j=0;j<3;j++) {
+				System.out.println(datatoQueue[j]);
+			}
+		}
 		/*for (int i = 0; i < 3; i++) {
 			int maxIndex = getIndexOfLargest(chainScore);
 			long[] datatoQueue = DataToQueue(maxIndex);
@@ -109,12 +117,11 @@ public class Process implements Runnable {
 	public void updateChaine(long[] data) {
 		Malade m = new Malade(data);
 		// m.printMalade();
+		System.out.println("Id du malade = " + m.getId_());
 		int chaineSize = chaine_.size(); // pas besoin de le calculer plusieurs fois
 		Boolean testUnkow = (m.getIdContaminedBy_() == -1);
 		Boolean testSize = (chaineSize == 0);
 		if (testUnkow || testSize) { // créer une nouvelle chaine de contamination car vide ou contaminant inconnu
-			// System.out.println("nb de chaines = "+chaine_.size());
-			System.out.println("Id du malade = " + m.getId_());
 			readLock.lock();
 			chaine_.add(createNewChain(m));
 			map.put(m.getId_(), chaineSize);
