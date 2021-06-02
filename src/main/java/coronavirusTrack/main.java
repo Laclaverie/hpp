@@ -20,7 +20,8 @@ public class main {
 		LinkedList<LinkedList<Malade>> chaine = new LinkedList<>() ;
 		HashMap<Integer,Long> chainCountyMap=new HashMap<Integer,Long>();
 		HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList=new HashMap<Integer, LinkedList<Malade>>();
-	
+		HashMap<Integer,Long> chainScoreMap_=new HashMap<Integer,Long>();
+
 		long date = 1589238000;
 		File p = new File(".");
 		String path = p.getAbsolutePath()+"/csv/1000000";
@@ -29,10 +30,13 @@ public class main {
 		
 		service.execute(new Reader(date, readerQueue, path));
 		for(int i=0;i<1;i++) {
-			service.execute(new Process(readerQueue, writterQueue, date,map_,chaine,chainCountyMap,chainIndexLinkedList));
+			service.execute(new Process(readerQueue, writterQueue, date,
+					map_,chaine,
+					chainCountyMap,
+					chainIndexLinkedList,
+					chainScoreMap_));
 		}
 
-		
 		shutdownAndAwaitTermination(service);
 		System.out.println(" fin ");
 	}

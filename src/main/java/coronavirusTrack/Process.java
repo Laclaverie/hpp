@@ -20,8 +20,9 @@ public class Process implements Runnable {
 	private ArrayBlockingQueue<long[]> writterqueue_; // non utilisé dans un premier temps
 	private LinkedList<LinkedList<Malade>> chaine_;
 	private HashMap<Long, Integer> map; // <Id du malade,chaine associée>
-	private HashMap<Integer, Long> chainCountyMap; // <id de la chaine, id du pays>
-	private HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList;
+	private HashMap<Integer,Long> chainCountyMap; // <id de la chaine, id du pays>
+	private HashMap<Integer,LinkedList<Malade>> chainIndexLinkedList; // <index, chaine de numéro index> 
+	private HashMap<Integer,Long> chainScoreMap;
 	private int[] three_largest_chains = new int[3];
 	private long[] chainScore;
 	long date_ = 0;
@@ -31,9 +32,14 @@ public class Process implements Runnable {
 	Lock readLock = readWriteLock.readLock();
 	Lock writeLock = readWriteLock.writeLock();
 
-	public Process(ArrayBlockingQueue<long[]> readerqueue, ArrayBlockingQueue<long[]> writterqueue, long date,
-			HashMap<Long, Integer> map_, LinkedList<LinkedList<Malade>> chaine, HashMap<Integer, Long> chainCountyMap_,
-			HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList_) {
+	public Process(ArrayBlockingQueue<long[]> readerqueue, ArrayBlockingQueue<long[]> writterqueue, 
+			long date,
+			HashMap<Long, Integer> map_,
+			LinkedList<LinkedList<Malade>> chaine,
+			HashMap<Integer, Long> chainCountyMap_,
+			HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList_,
+			HashMap<Integer,Long> chainScoreMap_
+			) {
 		/**
 		 * Dans la HashMap <ID de la personne infectée, ID de la première personne de la
 		 * chaine>
@@ -45,6 +51,7 @@ public class Process implements Runnable {
 		this.chaine_ = chaine;
 		this.setChainCountyMap(chainCountyMap_);
 		this.setChainIndexLinkedList(chainIndexLinkedList_);
+		this.setChainScoreMap(chainScoreMap_);
 	}
 
 	@Override
@@ -75,9 +82,11 @@ public class Process implements Runnable {
 
 	public void putIntoQueue() {
 
+		System.out.println("find score");
 		findScoreOfAllChains();
+		System.out.println("score ok");
 
-		for (int i = 0; i < 3; i++) {
+		/*for (int i = 0; i < 3; i++) {
 			int maxIndex = getIndexOfLargest(chainScore);
 			long[] datatoQueue = DataToQueue(maxIndex);
 			chainScore[maxIndex] = -1; // enlever le score le plus élevé
@@ -87,6 +96,13 @@ public class Process implements Runnable {
 				e.printStackTrace();
 			}
 		}
+		long[] poison= {-1,-1,-1};
+		try {
+			writterqueue_.put(poison);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 		// System.out.println(" finiiiiiiiiiiiiiiiii");
 	}
 
@@ -104,6 +120,7 @@ public class Process implements Runnable {
 			map.put(m.getId_(), chaineSize);
 			chainCountyMap.put(chaineSize, m.getIdPays_());
 			chainIndexLinkedList.put(chaineSize, createNewChain(m));
+			chainScoreMap.put(chaineSize,setScoreDate(m.getDateContamined_(), date_));
 			readLock.unlock();
 
 		} else { // deux cas : soit on trouve le contaminant soit on ne le trouve pas (et donc il
@@ -122,6 +139,7 @@ public class Process implements Runnable {
 				map.put(m.getId_(), chaineSize);
 				chainCountyMap.put(chaineSize, m.getIdPays_());
 				chainIndexLinkedList.put(chaineSize, createNewChain(m));
+				chainScoreMap.put(chainNumber,setScoreDate(m.getDateContamined_(), date_));
 				readLock.unlock();
 			} else { // créé une chaine
 				if (m.getIdPays_() != chainCountyMap.get(chainNumber)) {
@@ -130,15 +148,16 @@ public class Process implements Runnable {
 					map.put(m.getId_(), chaineSize);
 					chainCountyMap.put(chaineSize, m.getIdPays_());
 					chainIndexLinkedList.put(chaineSize, createNewChain(m));
-
+					chainScoreMap.put(chainNumber,setScoreDate(m.getDateContamined_(), date_));
 					readLock.unlock();
 				} else { // update une chaine
-					m.setScore_(setScoreDate(m.getDateContamined_(), date_));
+					//m.setScore_(setScoreDate(m.getDateContamined_(), date_));
 					readLock.lock();
 					// chaine_.get(chainNumber).add(m);
 					chainIndexLinkedList.get(chainNumber).add(m);
 					map.put(m.getId_(), chainNumber);
 					chainCountyMap.put(chainNumber, m.getIdPays_());
+					chainScoreMap.put(chainNumber, chainScoreMap.get(chainNumber)+setScoreDate(m.getDateContamined_(), date_));
 					readLock.unlock();
 
 				}
@@ -222,13 +241,9 @@ public class Process implements Runnable {
 		/**
 		 * compter le score d'une chaine à partir de l'index de celle-ci
 		 */
-		long score = 0;
-		Iterator<Malade> it = chaine_.get(index).iterator();
-		while (it.hasNext()) {
-			score = score + it.next().getScore_();
-		}
+		
 		// System.out.println("score =" + score + " index = "+index);
-		return score;
+		return chainScoreMap.get(index);
 	}
 
 	public long[] DataToQueue(int index) {
@@ -322,6 +337,14 @@ public class Process implements Runnable {
 
 	public void setChainIndexLinkedList(HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList) {
 		this.chainIndexLinkedList = chainIndexLinkedList;
+	}
+
+	public HashMap<Integer,Long> getChainScoreMap() {
+		return chainScoreMap;
+	}
+
+	public void setChainScoreMap(HashMap<Integer,Long> chainScoreMap) {
+		this.chainScoreMap = chainScoreMap;
 	}
 
 }

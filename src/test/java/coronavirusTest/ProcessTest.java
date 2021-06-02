@@ -27,10 +27,11 @@ public class ProcessTest {
 		HashMap<Long, Integer> map_=new HashMap<Long,Integer>();
 		LinkedList<LinkedList<Malade>> chaine = new LinkedList<>() ;
 		HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList=new HashMap<Integer, LinkedList<Malade>>();
-
+		HashMap<Integer,Long> chainScoreMap_=new HashMap<Integer,Long>();
+		
 		// --- get information --- 
-		Process monP = new Process(readerqueue_, writterqueue_,date,map_,chaine,chainCountyMap,chainIndexLinkedList);
-		Process monP2 = new Process(readerqueue_, writterqueue_,date,map_,chaine,chainCountyMap,chainIndexLinkedList);
+		Process monP = new Process(readerqueue_, writterqueue_,date,map_,chaine,chainCountyMap,chainIndexLinkedList, chainScoreMap_);
+		Process monP2 = new Process(readerqueue_, writterqueue_,date,map_,chaine,chainCountyMap,chainIndexLinkedList,chainScoreMap_);
 		
 		long[] m1 = {1,1582161158,150,0};
 		long[] m2 = {2,1583091884,151,1};
