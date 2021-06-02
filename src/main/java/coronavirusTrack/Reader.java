@@ -1,6 +1,7 @@
 package coronavirusTrack;
 
 import java.io.BufferedReader;
+import java.util.Scanner;  
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class Reader {
 	private ArrayBlockingQueue<long[]> readerqueue_;
 	private String directory_;
 	private long fin_date_;
+	private Scanner[] scan_tab_;
 
 	// Constructor
 	
@@ -46,6 +48,8 @@ public class Reader {
 		File[] csv;
 		p = new File(directory_);
 		csv = p.listFiles();
+		//scan_tab_ = new BufferedReader[csv.length];
+		scan_tab_ = new Scanner[csv.length];
 		int [] i_line = new int[csv.length];
 		String [] csv_line = new String[csv.length];
 		int line_a_modif = 0;
@@ -54,39 +58,44 @@ public class Reader {
 		for (int i=0; i < csv.length;i++)
 		{
 			end_line[i] = (int) Files.lines(csv[i].toPath()).count();
+			
+			//scan_tab_[i] = new BufferedReader(new FileReader(csv[i]));
+			scan_tab_[i] = new Scanner(csv[i]);  
+			//scan_tab_[i].useDelimiter(",");
+			
 		}
 		
 		boolean flag = true;
 		boolean poison = true;
+		boolean first = false;
+		
+		
+		for (int j=0; j < csv.length;j++) {
+			
+			csv_line[j] = Read(j, i_line);
+			
+		}
 		
 		
 		// Loop
 		
 		while (flag)
 		{
-			for (int i=0; i < csv.length;i++)
-			{
+			//for (int i=0; i < csv.length;i++)
+			//{
 				//System.out.println(csv[i]);
-				for (int j=0; j < csv.length;j++) {
-					if (end_line[j] == i_line[j])
-					{
-						i_line[j] = -1;
-					}
-				}
-				
-				for (int j=0; j < csv.length;j++) {
-					if (i_line[j] == -1)
-					{
-						csv_line[j] = "none";
-					}
-					else
-					{
-						csv_line[j] = Read(i_line[j], csv[j].toString());
-					}	
-				}
-				
-				line_a_modif = Compare(csv_line, end_line, i_line);
+			if (first) {
+				csv_line[line_a_modif] = Read(line_a_modif, i_line);
+			}
+			else {
+				first = true;
+			}
+			
+
+				line_a_modif = Compare(csv_line, i_line);
 				//System.out.println(line_a_modif);
+				
+				
 				if (line_a_modif == -1)
 				{
 					for (int k = 0; k < i_line.length; k++) 
@@ -109,42 +118,65 @@ public class Reader {
 					Cut(csv_line[line_a_modif], line_a_modif);
 					i_line[line_a_modif] ++;
 				}
-			}	
+				
+				
+			//}	
 				
 				
 		}
 	}
 	
 	
-	public String Read(int n, String path )
+	public String Read(int n, int[] i_line) throws IOException
 	{
 		 // The line number
 	      String line = null;
-	      try (Stream<String> lines = Files.lines(Paths.get(path))) {
-	          line = lines.skip(n).findFirst().get();
-	        }
-	      catch(IOException e){
-	        System.out.println(e);
+
+	      /*
+	      if ((line = scan_tab_[n].readLine()) != null)  //returns a boolean value  
+	      {  
+	    	  //line = scan_tab_[n].next();  //find and returns the next complete token from this scanner  
+	    	  System.out.println(line);
+	    	  i_line[n] ++;
+	      } 
+	      //if((line = scan_tab_[n].readLine()) == null)
+	      //{	      
+	    //	  i_line[n] = -1;
+	     // }*/
+	      //System.out.println(n);
+	      if (n != -1) {
+		      if (scan_tab_[n].hasNextLine()) 
+		      {
+		          line = scan_tab_[n].nextLine();
+		          
+		          i_line[n] += 1;
+		      }
+		      else
+		      {
+		    	  i_line[n] = -1;
+		    	  System.out.println("Fichier n:" +n+ "est fini !");
+		      }
 	      }
+	      else  {line = "none";}
+	      
 		return line;
 	}
 	
-	@SuppressWarnings("null")
-	public int Compare(String t_line[], int end_line[], int i_line[]) throws ParseException
+	public int Compare(String t_line[], int i_line[]) throws ParseException
 	{
 		int modif = -1;
 		long date[] = new long[t_line.length] ;
-		//SimpleDateFormat format = new SimpleDateFormat("sssssssss");
 		long mem_date = 0;
 		
 		for (int i=0; i < t_line.length; i++)
 		{
 			if (i_line[i] != -1)
 			{
+				
 				String[] split = t_line[i].split(", ");
 				String[] split_date = split[4].split("\\.");
 				date[i] = Long.valueOf(split_date[0]);
-				if (fin_date_ > date[i])
+				if (fin_date_ >= date[i])
 				{
 					if (mem_date == 0)
 					{
