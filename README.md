@@ -63,11 +63,16 @@ Nous écrivons les résultats comme demandé dans l'énoncé, dans un fichier.cs
 
 ### Au sujet des tests
 Pour vérifier si nous avions des résultats cohérents, nous avons calculés manuellement la sortie espérée du programme avec un code matlab présent dans testhpp.m.
+![hpp](testhpp.m)
 ### Résultats
-Nous avons en premier lieu implémenté une version multithread puis l'avons testé. Les résultats sont présentés sur cette courbe.
-
+Nous avons en premier lieu implémenté une version multithread puis l'avons testé.
 Nous avons ensuite adapté notre code pour produire une version monothread.... Quelle ne fût pas notre stupéfaction que de voir que la version monothread prend moins de temps à s'executer que la version multithreadée!
+La courbe ci dessous vous présente une comparaison des deux méthodes.
 
+
+![img](comparison.png)
+
+Nous avons cependant une utilisation d'environ 1,5Go de RAM pour le test avec 1 million d'entrées.
 Plusieurs pistes :
 - La création de threads est potentiellement trop coûteuse par rapport au temps de calcul global
 - Nous ne faisons pas de calculs de benchmark, nous calculons un temps ( avec nanotime), un benchmark pourrait nous éclairer un peu plus
