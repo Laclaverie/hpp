@@ -63,7 +63,7 @@ Nous écrivons les résultats comme demandé dans l'énoncé, dans un fichier.cs
 
 ### Au sujet des tests
 Pour vérifier si nous avions des résultats cohérents, nous avons calculés manuellement la sortie espérée du programme avec un code matlab présent dans testhpp.m.
-![hpp](testhpp.m)
+
 ### Résultats
 Nous avons en premier lieu implémenté une version multithread puis l'avons testé.
 Nous avons ensuite adapté notre code pour produire une version monothread.... Quelle ne fût pas notre stupéfaction que de voir que la version monothread prend moins de temps à s'executer que la version multithreadée!
