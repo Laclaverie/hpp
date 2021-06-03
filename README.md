@@ -58,3 +58,6 @@ En cela, nous avons mit en place la ```HashMap<Integer,LinkedList<Malade>> chain
 Grâce à cette amélioration, nous avons gagné un temps de calcul important : en effet, nous sommes actuellement à moins de 10 secondes de calculs.
 
 ### Writting
+
+### Au sujet des tests
+Pour vérifier si nous avions des résultats cohérents

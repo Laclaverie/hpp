@@ -47,7 +47,13 @@ public class main {
 
 			System.out.println(" Temps d'execution : " + estimatedTime / 1e9);
 		} else {
-
+			Reader monR=new Reader(date, readerQueue, path);
+			Process monP=new Process(readerQueue, writterQueue, date, map_, chaine, chainCountyMap,
+						chainIndexLinkedList, chainScoreMap_);
+			Writer monW = new Writer(writterQueue, path);
+			
+			
+						
 		}
 	}
 
