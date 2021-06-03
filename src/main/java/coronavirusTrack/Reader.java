@@ -148,18 +148,6 @@ public class Reader implements Runnable {
 		 // The line number
 	      String line = null;
 
-	      /*
-	      if ((line = scan_tab_[n].readLine()) != null)  //returns a boolean value  
-	      {  
-	    	  //line = scan_tab_[n].next();  //find and returns the next complete token from this scanner  
-	    	  System.out.println(line);
-	    	  i_line[n] ++;
-	      } 
-	      //if((line = scan_tab_[n].readLine()) == null)
-	      //{	      
-	    //	  i_line[n] = -1;
-	     // }*/
-	      //System.out.println(n);
 	      if (n != -1) {
 		      if (scan_tab_[n].hasNextLine()) 
 		      {
@@ -170,7 +158,8 @@ public class Reader implements Runnable {
 		      else
 		      {
 		    	  i_line[n] = -1;
-		    	  System.out.println("Fichier n:" +n+ "est fini !");
+		    	  //System.out.println("Fichier n:" +n+ "est fini !");
+		    	  
 		      }
 	      }
 	      else  {line = "none";}

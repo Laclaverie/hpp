@@ -12,6 +12,10 @@ public class main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		// Calcul du temps :
+		
+		long startTime = System.nanoTime();
+		
 		int numberofThread = 4;
 		
 		ArrayBlockingQueue<long[]> readerQueue=new ArrayBlockingQueue<long[]>(1000);
@@ -22,7 +26,7 @@ public class main {
 		HashMap<Integer, LinkedList<Malade>> chainIndexLinkedList=new HashMap<Integer, LinkedList<Malade>>();
 		HashMap<Integer,Long> chainScoreMap_=new HashMap<Integer,Long>();
 
-		long date = 1589238000;
+		long date = 1587905290;
 		File p = new File(".");
 		String path = p.getAbsolutePath()+"/csv/1000000";
 		System.out.println("début ");
@@ -36,9 +40,12 @@ public class main {
 					chainIndexLinkedList,
 					chainScoreMap_));
 		}
-
+		service.execute(new Writer(writterQueue, path));
 		shutdownAndAwaitTermination(service);
-		System.out.println(" fin ");
+		
+		long estimatedTime = System.nanoTime() - startTime;
+		
+		System.out.println(" Temps d'execution : " + estimatedTime/ 1e9);
 	}
 	static void shutdownAndAwaitTermination(ExecutorService pool) {
 		pool.shutdown(); // Disable new tasks from being submitted

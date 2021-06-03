@@ -84,17 +84,8 @@ public class Process implements Runnable {
 		System.out.println("find score");
 		findScoreOfAllChains();
 		System.out.println("score ok");
-
+		
 		for (int i = 0; i < 3; i++) {
-			int maxIndex = getIndexOfLargest(chainScore);
-			long[] datatoQueue = DataToQueue(maxIndex);
-			chainScore[maxIndex] = -1; // enlever le score le plus élevé
-			System.out.println("data :");
-			for (int j=0;j<3;j++) {
-				System.out.println(datatoQueue[j]);
-			}
-		}
-		/*for (int i = 0; i < 3; i++) {
 			int maxIndex = getIndexOfLargest(chainScore);
 			long[] datatoQueue = DataToQueue(maxIndex);
 			chainScore[maxIndex] = -1; // enlever le score le plus élevé
@@ -110,14 +101,14 @@ public class Process implements Runnable {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 		// System.out.println(" finiiiiiiiiiiiiiiiii");
 	}
 
 	public void updateChaine(long[] data) {
 		Malade m = new Malade(data);
 		// m.printMalade();
-		System.out.println("Id du malade = " + m.getId_());
+		//System.out.println("Id du malade = " + m.getId_());
 		int chaineSize = chaine_.size(); // pas besoin de le calculer plusieurs fois
 		Boolean testUnkow = (m.getIdContaminedBy_() == -1);
 		Boolean testSize = (chaineSize == 0);
