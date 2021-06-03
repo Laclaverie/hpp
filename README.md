@@ -21,9 +21,10 @@ Pour toute information supplémentaire sur le détail des exigences, veuillez co
 
 ## Comment l'avons nous implémentée?
 ### Général
-Nous nous sommes positionnés dès le départ sur une solution qui utilise plusieurs threads. Nous avons donc codé dès le départ dans cette optique, nous n'avons pas réussit à sérialiser le code pour pouvoir faire la comparaison entre un programme monothread et multithread.
+Nous avons implémenté une version multiThread et une version monothread de notre application. Notre objectif initial était de mettre en valeur le multithreading et le gain de temps que cela aurait apporté pour cette solution lorsque nous avons un jeu de données importantes.
 ### Reading
 
+Au début nous utilisions des méthodes " basiques " avec ```getLine() et skip()```, cependant celles-ci n'étaient pas optimisées car il y avait un parcours inutile de l'ensemble des lignes. Pour remédier à cela, nous avons utilisé des scanneurs, qui ont grandement amélioré notre vitesse de lecture.
 ### Processing
 Au début nous avions utilisé une unique liste chainée afin d'accomplir le tavail demandé de manière "naïve". Nous avons une LinkedList de linkedList de Malade. Nous avons une classe Malade qui contient toutes les informations qui sont utiles pour la suite : l'ID du Malade, la date pour laquelle il a été infectée, son pays d'origine, l'id de la personne qui l'a contaminée, l'id de son pays d'origine.
 ```java
@@ -58,6 +59,16 @@ En cela, nous avons mit en place la ```HashMap<Integer,LinkedList<Malade>> chain
 Grâce à cette amélioration, nous avons gagné un temps de calcul important : en effet, nous sommes actuellement à moins de 10 secondes de calculs.
 
 ### Writting
+Nous écrivons les résultats comme demandé dans l'énoncé, dans un fichier.csv
 
 ### Au sujet des tests
-Pour vérifier si nous avions des résultats cohérents
+Pour vérifier si nous avions des résultats cohérents, nous avons calculés manuellement la sortie espérée du programme avec un code matlab présent dans testhpp.m.
+### Résultats
+Nous avons en premier lieu implémenté une version multithread puis l'avons testé. Les résultats sont présentés sur cette courbe.
+
+Nous avons ensuite adapté notre code pour produire une version monothread.... Quelle ne fût pas notre stupéfaction que de voir que la version monothread prend moins de temps à s'executer que la version multithreadée!
+
+Plusieurs pistes :
+- La création de threads est potentiellement trop coûteuse par rapport au temps de calcul global
+- Nous ne faisons pas de calculs de benchmark, nous calculons un temps ( avec nanotime), un benchmark pourrait nous éclairer un peu plus
+- Le jeu de données n'est pas assez grand pour nous permettre de voir une différence notable.
