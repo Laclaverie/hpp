@@ -3,6 +3,7 @@ package coronavirusTrack;
 import java.io.BufferedReader;
 import java.util.Scanner;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -209,6 +210,56 @@ public class Reader implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+	}
+	
+	public void Init_Mono() throws IOException
+	{
+		File p = new File(".");
+		File[] csv;
+		p = new File(directory_);
+		csv = p.listFiles();
+		int[] i_line = new int[csv.length];
+		String[] csv_line = new String[csv.length];
+		
+		java.util.Arrays.fill(i_line, 0);
+		int[] end_line = new int[csv.length];
+		
+		
+		
+		// scan_tab_ = new BufferedReader[csv.length];
+		scan_tab_ = new Scanner[csv.length];
+		
+		for (int i = 0; i < csv.length; i++) {
+			end_line[i] = (int) Files.lines(csv[i].toPath()).count();
+
+			// scan_tab_[i] = new BufferedReader(new FileReader(csv[i]));
+			scan_tab_[i] = new Scanner(csv[i]);
+			// scan_tab_[i].useDelimiter(",");
+
+		}
+	}
+	
+	public long[] Cut_mono(String line, int pays) {
+
+		String[] split = line.split(", ");
+		long tmp;
+
+		String[] split_date = split[4].split("\\.");
+
+		long[] chaine = new long[4];
+		chaine[0] = Long.valueOf(split[0]);
+		chaine[1] = Long.valueOf(split_date[0]);
+		if (split[5].equals("unknown")) {
+			tmp = -1;
+		} else {
+			tmp = Long.valueOf(split[5]);
+		}
+		chaine[2] = tmp;
+		chaine[3] = Long.valueOf(pays);
+		// String cut_line = split[0]+","+split_date[0]+","+tmp+","+pays;
+		return chaine;
+		// System.out.println(cut_line);
 
 	}
 
