@@ -27,9 +27,9 @@ public class main {
 		File p = new File(".");
 		String path = p.getAbsolutePath() + "/csv/1000000";
 		System.out.println("début ");
-		
+
 		boolean multithread = true;
-		
+
 		if (multithread) {
 
 			int numberofThread = 4;
@@ -47,13 +47,21 @@ public class main {
 
 			System.out.println(" Temps d'execution : " + estimatedTime / 1e9);
 		} else {
-			Reader monR=new Reader(date, readerQueue, path);
-			Process monP=new Process(readerQueue, writterQueue, date, map_, chaine, chainCountyMap,
-						chainIndexLinkedList, chainScoreMap_);
+			Reader monR = new Reader(date, readerQueue, path);
+			Process monP = new Process(readerQueue, writterQueue, date, map_, chaine, chainCountyMap,
+					chainIndexLinkedList, chainScoreMap_);
 			Writer monW = new Writer(writterQueue, path);
-			
-			
-						
+
+			// monP.updateChaine(data);
+
+			// monP.findScoreOfAllChains();
+			for (int i = 0; i < 3; i++) {
+				int maxIndex = monP.getIndexOfLargest(monP.getChainScore());
+				long[] datatoQueue = monP.DataToQueue(maxIndex);
+				monP.getChainScore()[maxIndex] = -1; // enlever le score le plus élevé
+
+			}
+
 		}
 	}
 
