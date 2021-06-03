@@ -22,7 +22,7 @@ public class Process implements Runnable {
 	private HashMap<Long, Integer> map; // <Id du malade,chaine associée>
 	private HashMap<Integer,Long> chainCountyMap; // <id de la chaine, id du pays>
 	private HashMap<Integer,LinkedList<Malade>> chainIndexLinkedList; // <index, chaine de numéro index> 
-	private HashMap<Integer,Long> chainScoreMap;
+	private HashMap<Integer,Long> chainScoreMap; // <index, score de la chaine de numéro index>
 	private int[] three_largest_chains = new int[3];
 	private long[] chainScore;
 	long date_ = 0;
@@ -193,7 +193,9 @@ public class Process implements Runnable {
 			chainScore[i] = countScoreInAChain(i);
 		}
 	}
-
+public void applyRule6() {
+	
+}
 	public long setScoreDate(long date1, long date2) {
 		if (Math.abs(date1 - date2) > 604800 && Math.abs(date1 - date2) <= 1209600) {
 			// we set the score at 4

@@ -59,7 +59,6 @@ public class ProcessTest {
 		assertEquals(1, monP.getChaine_().get(0).get(0).getId_()); // vérification que c'est le bon ID
 		assertEquals(150, monP.getChaine_().get(0).get(0).getIdContaminedBy_()); //Verification bon ID de contaminé
 		assertEquals(true,monP.getMap().containsKey(M1.getId_())); // vérification hashtable
-	//	assertEquals((Integer)0, monP.getMapCountryChain().get(M1.getIdPays_()));
 		
 		System.out.println("\nCas 2 :");
 		monP.updateChaine(m2);
@@ -68,7 +67,6 @@ public class ProcessTest {
 		assertEquals(2, monP.getChaine_().get(1).get(0).getId_()); // vérification que c'est le bon ID
 		assertEquals(151, monP.getChaine_().get(1).get(0).getIdContaminedBy_()); //Verification bon ID de contaminé
 		assertEquals(true,monP.getMap().containsKey(M2.getId_())); // vérification hashtable
-	//	assertEquals((Integer)1, monP.getMapCountryChain().get(M2.getIdPays_()));
 
 		System.out.println("\nCas 3 : ");
 		monP.updateChaine(m3);
@@ -77,7 +75,6 @@ public class ProcessTest {
 		assertEquals(3, monP.getChaine_().get(2).get(0).getId_()); // vérification que c'est le bon ID
 		assertEquals(2, monP.getChaine_().get(2).get(0).getIdContaminedBy_()); //Verification bon ID de contaminé
 		assertEquals(true,monP.getMap().containsKey(M3.getId_())); // vérification hashtable
-	//	assertEquals((Integer)2, monP.getMapCountryChain().get(M3.getIdPays_()));
 
 		System.out.println(" largest Chain \n");
 		monP.updateChaine(m4);
@@ -87,9 +84,6 @@ public class ProcessTest {
 		monP.updateChaine(m8);
 		monP.updateChaine(m9);
 		
-		// monP.findLargestChains();
-		
-		monP.putIntoQueue();
-		
+
 	}
 }
