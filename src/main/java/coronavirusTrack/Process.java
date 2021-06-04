@@ -1,15 +1,7 @@
 package coronavirusTrack;
 
-import java.awt.List;
-import java.lang.reflect.AnnotatedArrayType;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -165,11 +157,12 @@ public class Process implements Runnable {
 		}
 	}
 
-	public void findLargestChains() { // plus longue chaine V1 : n'est pas utile ici
+	public void findLargestChains() { // plus longue chaine V1 : n'est pas utile ici 
 		/**
 		 * Après avoir mis en place toutes les chaines, regarder quelles sont les plus
 		 * longues map contient <id du malade, chaine pour laquelle il appartient>
 		 * mapCountry contient <id du pays, chaine de malade du pays associé>
+		 * Cette fonction n'est pas utile dans le sens où ce n'est pas la bonne méthode pour calculer le poids d'une chaine
 		 */
 		int[] occurrence = new int[map.size()];
 		for (Integer idChaine : map.values()) { // on parcourt tous les malades dans la hashmap
@@ -194,7 +187,7 @@ public class Process implements Runnable {
 		}
 	}
 public void applyRule6() {
-	
+	// not implemeted yet
 }
 	public long setScoreDate(long date1, long date2) {
 		if (Math.abs(date1 - date2) > 604800 && Math.abs(date1 - date2) <= 1209600) {
@@ -225,7 +218,7 @@ public void applyRule6() {
 		return largest; // position of the first largest found
 	}
 
-	public int getIndexOfLargest(long[] array) {
+	public int getIndexOfLargest(long[] array) { //surcharge de la fonction précédente pour s'adapter aux deux cas
 		if (array == null || array.length == 0)
 			return -1; // null or empty
 

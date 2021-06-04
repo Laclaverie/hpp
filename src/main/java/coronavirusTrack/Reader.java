@@ -1,22 +1,11 @@
 package coronavirusTrack;
 
-import java.io.BufferedReader;
-import java.util.Scanner;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.stream.Stream;
 
 public class Reader implements Runnable {
 
@@ -24,7 +13,7 @@ public class Reader implements Runnable {
 	private String directory_;
 	private long fin_date_;
 	private Scanner[] scan_tab_;
-	private boolean POISON_PILL = false;
+	
 
 	// Constructor
 
@@ -113,7 +102,6 @@ public class Reader implements Runnable {
 				if (poison == true) {
 					// envoie du colis piègé
 					flag = false;
-					POISON_PILL = true;
 					long[] poisonPILL = { -1, -1, -1 };
 					PutIntoQ(poisonPILL);
 				}
@@ -203,7 +191,6 @@ public class Reader implements Runnable {
 	}
 
 	public void PutIntoQ(long chaine[]) {
-		// readerqueue_.add(chaine);
 		try {
 			readerqueue_.put(chaine);
 		} catch (InterruptedException e) {
@@ -215,13 +202,14 @@ public class Reader implements Runnable {
 	
 	public void Init_Mono() throws IOException
 	{
+		/**
+		 * Initialiser les variables pour le cas où nous nous mettons en monothread
+		 */
 		File p = new File(".");
 		File[] csv;
 		p = new File(directory_);
 		csv = p.listFiles();
 		int[] i_line = new int[csv.length];
-		String[] csv_line = new String[csv.length];
-		
 		java.util.Arrays.fill(i_line, 0);
 		int[] end_line = new int[csv.length];
 		
@@ -241,7 +229,9 @@ public class Reader implements Runnable {
 	}
 	
 	public long[] Cut_mono(String line, int pays) {
-
+/**
+ * Ressemble en tout point à Cut, sauf qu'un long [] est renvoyé, on ne touche pas à la queue
+ */
 		String[] split = line.split(", ");
 		long tmp;
 

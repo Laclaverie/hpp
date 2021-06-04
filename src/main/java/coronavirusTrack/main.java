@@ -38,8 +38,12 @@ public class main {
 		File p = new File(".");
 		String path = p.getAbsolutePath() + "/csv/1000000";
 		System.out.println("début ");
-
-		boolean multithread = true;
+ /* ----------------- C'est ici qu'on choisit si multithread ou non !!!! -------------*/
+		// -----------------------------
+		
+		boolean multithread = false;
+		
+		// -----------------------------
 
 		if (multithread) {
 

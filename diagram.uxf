@@ -1,52 +1,64 @@
-<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>130</x><y>464</y><w>260</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Reader&gt;&gt;
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>0</x><y>390</y><w>260</w><h>260</h></coordinates><panel_attributes>&lt;&lt;Reader&gt;&gt;
 Package::coronavirusTrack
-{Some Properties}
+
 --
- -readerqueue : ArrayBlockingQueue&lt;String&gt;
- -directory : PATH
+ -readerqueue : ArrayBlockingQueue&lt;long[]&gt;
+ -directory : String
+- date : long
+- scan_tab : Scranner[]
 --
 Reader(date, readerqueue,directory)
 ~Reader()
-Search(date)
-Cut(String line) : String
-Putin2Q(String cutline)
---
-note : readerqueue : string -&gt; id,date,id
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>74</y><w>210</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Main&gt;&gt;
++Search() : void
++Cut( line: String, pays: int) 
++PutIntoQ(chaine long[])
++run() :void
++Init_Mono() : void
++Cut_mono(line: String, pays: int) long[]</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>460</x><y>0</y><w>210</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Main&gt;&gt;
 Package::coronavirusTrack
 {Some Properties}
 --
- -readerqueue : ArrayBlockingQueue
- -writerqueue : ArrayBlockingQueue
 --
-#Operation(i: int): int
-/+AbstractOperation()/
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>500</x><y>464</y><w>230</w><h>260</h></coordinates><panel_attributes>&lt;&lt;Process&gt;&gt;
++ shutdownAndAwaitTermination(pool: ExecutorService ) :void
++ main (args String[]) : void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>370</x><y>390</y><w>620</w><h>340</h></coordinates><panel_attributes>&lt;&lt;Process&gt;&gt;
 Package::coronavirusTrack
-{Some Properties}
+
 --
- -readerqueue : ArrayBlockingQueue&lt;String&gt;
- -writerqueue : ArrayBlockingQueue&lt;String&gt;
+ -readerqueue : ArrayBlockingQueue&lt;long[]&gt;
+ -writerqueue : ArrayBlockingQueue&lt;long[]&gt;
  -chaine : LinkedList&lt;LinkedList&gt;
 --
-Process(readerqueue, writerqueue)
-ParseQ()
+Process(readerqueue, writerqueue, date : long, allchains,chainCountryMap,chainIndexLinkedList, chainScoreMap)
+ParseQueue()
 getInformation (string): string
-updateChaine(int contaminedby , int id )
-putIntoQueue()
---
-note : writerqueue : string -&gt; top1_country_origin, top1_chain_root_person_id, top1_chain_score; top2_country_origin, top2_chain_root_person_id, top2_chain_score; top3_country_origin, top3_chain_root_person_id, top3_chain_score
-
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>830</x><y>464</y><w>250</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Writer&gt;&gt;
+updateChaine( data: long [] ) : void
+putIntoQueue() :void
+run : void 
+findLargestChains() : void
+ findScoreOfAllChains() : void
+setScoreDate(date1: long ,date2: long ) void
+getIndexOfLargest(array : int []): int
+getIndexOfLargest(array : long[]) : int
+countScoreInAChain(index : int);: long
+DataToQueue( index : int) : long[]
+createNewChain(m : Malade): LinkedList&lt;Malade&gt;
+isPOISON_PILL( data : long[]) : boolean
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1030</x><y>390</y><w>250</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Writer&gt;&gt;
 Package::coronavirusTrack
-{Some Properties}
+
 --
  -writerqueue : ArrayBlockingQueue&lt;String&gt;
+- directory_ : String
 --
 Writer(directory, writerqueue)
 ~Writer()
  -writein2file()
---
-#Operation(i: int): int
-/+AbstractOperation()/
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>210</x><y>254</y><w>410</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>390;10;280;90;180;90;10;210</additional_attributes></element><element><id>Relation</id><coordinates><x>610</x><y>254</y><w>30</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;210</additional_attributes></element><element><id>Relation</id><coordinates><x>630</x><y>254</y><w>340</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;100;90;210;90;320;210</additional_attributes></element></diagram>
+- run() :void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>80</x><y>180</y><w>490</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>470;10;360;90;260;90;10;210</additional_attributes></element><element><id>Relation</id><coordinates><x>560</x><y>180</y><w>30</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;210</additional_attributes></element><element><id>Relation</id><coordinates><x>580</x><y>180</y><w>590</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;100;90;210;90;570;210</additional_attributes></element><element><id>UMLNote</id><coordinates><x>900</x><y>120</y><w>330</w><h>110</h></coordinates><panel_attributes>Note..
+bg=blue
+Lorsque le constructeur possède beaucoup de paramètres,
+nous choisissons de mettre un nom explicite sans pour 
+autant préciser le type 
+par soucis de place</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>1720</x><y>400</y><w>140</w><h>70</h></coordinates><panel_attributes>Note..
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element></diagram>

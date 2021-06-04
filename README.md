@@ -67,10 +67,10 @@ Pour vérifier si nous avions des résultats cohérents, nous avons calculés ma
 ### Résultats
 Nous avons en premier lieu implémenté une version multithread puis l'avons testé.
 Nous avons ensuite adapté notre code pour produire une version monothread.... Quelle ne fût pas notre stupéfaction que de voir que la version monothread prend moins de temps à s'executer que la version multithreadée!
-La courbe ci dessous vous présente une comparaison des deux méthodes.
+Les courbes ci dessous vous présente une comparaison des deux méthodes.
 
 
-![img](comparison.png)
+![img](.png)
 
 Nous avons cependant une utilisation d'environ 1,5Go de RAM pour le test avec 1 million d'entrées.
 Plusieurs pistes :
