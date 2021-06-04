@@ -94,7 +94,7 @@ public class Process implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// System.out.println(" finiiiiiiiiiiiiiiiii");
+		// System.out.println(" fini");
 	}
 
 	public void updateChaine(long[] data) {
@@ -141,9 +141,7 @@ public class Process implements Runnable {
 					chainScoreMap.put(chainNumber,setScoreDate(m.getDateContamined_(), date_));
 					readLock.unlock();
 				} else { // update une chaine
-					//m.setScore_(setScoreDate(m.getDateContamined_(), date_));
 					readLock.lock();
-					// chaine_.get(chainNumber).add(m);
 					chainIndexLinkedList.get(chainNumber).add(m);
 					map.put(m.getId_(), chainNumber);
 					chainCountyMap.put(chainNumber, m.getIdPays_());
@@ -186,9 +184,6 @@ public class Process implements Runnable {
 			chainScore[i] = countScoreInAChain(i);
 		}
 	}
-public void applyRule6() {
-	// not implemeted yet
-}
 	public long setScoreDate(long date1, long date2) {
 		if (Math.abs(date1 - date2) > 604800 && Math.abs(date1 - date2) <= 1209600) {
 			// we set the score at 4

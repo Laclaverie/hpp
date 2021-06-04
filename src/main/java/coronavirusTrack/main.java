@@ -3,11 +3,9 @@ package coronavirusTrack;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -65,7 +63,7 @@ public class main {
 			Reader monR = new Reader(date, readerQueue, path);
 			Process monP = new Process(readerQueue, writterQueue, date, map_, chaine, chainCountyMap,
 					chainIndexLinkedList, chainScoreMap_);
-			Writer monW = new Writer(writterQueue, path);
+			
 
 			// Initialization
 			
@@ -92,8 +90,7 @@ public class main {
 				// Loop
 
 				while (flag) {
-					// for (int i=0; i < csv.length;i++)
-					// {
+
 					// System.out.println(csv[i]);
 					if (first) {
 						csv_line[line_a_modif] = monR.Read(line_a_modif, i_line);
@@ -135,7 +132,6 @@ public class main {
 			for (int i = 0; i < csv.length; i++) {		
 			
 				String line;
-				long [] data = new long[3];
 				int maxIndex = monP.getIndexOfLargest(monP.getChainScore());
 				long[] datatoQueue = monP.DataToQueue(maxIndex);
 				String [] split = csv[(int) datatoQueue[0]].getName().split("\\.");
@@ -153,7 +149,7 @@ public class main {
 		}
 	}
 
-	static void shutdownAndAwaitTermination(ExecutorService pool) {
+	static void shutdownAndAwaitTermination(ExecutorService pool) { // TD multithread
 		pool.shutdown(); // Disable new tasks from being submitted
 		try {
 			// Wait a while for existing tasks to terminate

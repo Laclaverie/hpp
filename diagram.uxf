@@ -14,7 +14,7 @@ Reader(date, readerqueue,directory)
 +PutIntoQ(chaine long[])
 +run() :void
 +Init_Mono() : void
-+Cut_mono(line: String, pays: int) long[]</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>460</x><y>0</y><w>210</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Main&gt;&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>460</x><y>0</y><w>210</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Main&gt;&gt;
 Package::coronavirusTrack
 {Some Properties}
 --

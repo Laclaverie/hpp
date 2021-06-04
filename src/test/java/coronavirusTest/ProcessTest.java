@@ -1,10 +1,7 @@
 package coronavirusTest;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -31,8 +28,6 @@ public class ProcessTest {
 		
 		// --- get information --- 
 		Process monP = new Process(readerqueue_, writterqueue_,date,map_,chaine,chainCountyMap,chainIndexLinkedList, chainScoreMap_);
-		Process monP2 = new Process(readerqueue_, writterqueue_,date,map_,chaine,chainCountyMap,chainIndexLinkedList,chainScoreMap_);
-		
 		long[] m1 = {1,1582161158,150,0};
 		long[] m2 = {2,1583091884,151,1};
 		long[] m3 = {3,1585699579,2,2};
