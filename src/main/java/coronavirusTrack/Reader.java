@@ -42,16 +42,13 @@ public class Reader implements Runnable {
 	}
 
 	public void Search() throws ParseException, IOException {
-		// ----
-		// String path = p.getAbsolutePath()+"/csv/20";
-		// ----
+
 
 		// Initialization
 		File p = new File(".");
 		File[] csv;
 		p = new File(directory_);
 		csv = p.listFiles();
-		// scan_tab_ = new BufferedReader[csv.length];
 		scan_tab_ = new Scanner[csv.length];
 		int[] i_line = new int[csv.length];
 		String[] csv_line = new String[csv.length];
@@ -60,12 +57,9 @@ public class Reader implements Runnable {
 		int[] end_line = new int[csv.length];
 		for (int i = 0; i < csv.length; i++) {
 			end_line[i] = (int) Files.lines(csv[i].toPath()).count();
-
-			// scan_tab_[i] = new BufferedReader(new FileReader(csv[i]));
 			scan_tab_[i] = new Scanner(csv[i]);
-			// scan_tab_[i].useDelimiter(",");
-
 		}
+		long data[] = new long [4];
 
 		boolean flag = true;
 		boolean poison = true;
@@ -80,9 +74,7 @@ public class Reader implements Runnable {
 		// Loop
 
 		while (flag) {
-			// for (int i=0; i < csv.length;i++)
-			// {
-			// System.out.println(csv[i]);
+
 			if (first) {
 				csv_line[line_a_modif] = Read(line_a_modif, i_line);
 			} else {
@@ -107,7 +99,8 @@ public class Reader implements Runnable {
 				}
 				poison = true;
 			} else {
-				Cut(csv_line[line_a_modif], line_a_modif);
+				data = Cut(csv_line[line_a_modif], line_a_modif); // on découpe et on envoie directement
+				PutIntoQ(data);
 				i_line[line_a_modif]++;
 			}
 
@@ -167,28 +160,7 @@ public class Reader implements Runnable {
 		return modif;
 	}
 
-	public void Cut(String line, int pays) {
 
-		String[] split = line.split(", ");
-		long tmp;
-
-		String[] split_date = split[4].split("\\.");
-
-		long[] chaine = new long[4];
-		chaine[0] = Long.valueOf(split[0]);
-		chaine[1] = Long.valueOf(split_date[0]);
-		if (split[5].equals("unknown")) {
-			tmp = -1;
-		} else {
-			tmp = Long.valueOf(split[5]);
-		}
-		chaine[2] = tmp;
-		chaine[3] = Long.valueOf(pays);
-		// String cut_line = split[0]+","+split_date[0]+","+tmp+","+pays;
-		PutIntoQ(chaine);
-		// System.out.println(cut_line);
-
-	}
 
 	public void PutIntoQ(long chaine[]) {
 		try {
@@ -228,7 +200,7 @@ public class Reader implements Runnable {
 		}
 	}
 	
-	public long[] Cut_mono(String line, int pays) {
+	public long[] Cut(String line, int pays) {
 /**
  * Ressemble en tout point à Cut, sauf qu'un long [] est renvoyé, on ne touche pas à la queue
  */

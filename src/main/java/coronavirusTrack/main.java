@@ -39,7 +39,7 @@ public class main {
  /* ----------------- C'est ici qu'on choisit si multithread ou non !!!! -------------*/
 		// -----------------------------
 		
-		boolean multithread = false;
+		boolean multithread = true;
 		
 		// -----------------------------
 
@@ -115,7 +115,7 @@ public class main {
 						}
 						poison = true;
 					} else {
-						monP.updateChaine(monR.Cut_mono(csv_line[line_a_modif], line_a_modif));
+						monP.updateChaine(monR.Cut(csv_line[line_a_modif], line_a_modif));
 						i_line[line_a_modif]++;
 					}
 

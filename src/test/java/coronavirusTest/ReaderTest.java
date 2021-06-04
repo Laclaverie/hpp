@@ -1,15 +1,8 @@
 package coronavirusTest;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-//import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.junit.Test;
@@ -24,7 +17,7 @@ public class ReaderTest {
 		String path = p.getAbsolutePath()+"/csv/1000000";
 		//DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		//Date date = format.parse("2020-01-30");
-		ArrayBlockingQueue<long[]> readerqueue_=new ArrayBlockingQueue<long[]>(20); // non utilisé dans un premier temps
+		ArrayBlockingQueue<long[]> readerqueue_=new ArrayBlockingQueue<long[]>(1000001); // non utilisé dans un premier temps
 		long date = 1589238000;
 
 		Reader monR =new Reader(date,readerqueue_,path);
