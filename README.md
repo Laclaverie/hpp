@@ -37,7 +37,7 @@ Un deuxième élément important à prendre en compte est le fait que dès les p
 La totalité de chaine de traitement mettait plus de 1h pour le million de données en entrée, ce qui ne nous satisfaisait pas.
 
 C'est pourquoi nous avons opté pour la solution suivante : toutes les opérations de complexité O(N) doivent être améliorées au possible pour se rapprocher de O(1). 
-En cela, nous avons utilisé 5 HashMap :
+En cela, nous avons utilisé 4 HashMap :
 ```java
 	private HashMap<Long, Integer> map; // <Id du malade,chaine associée>
 	private HashMap<Integer,Long> chainCountyMap; // <id de la chaine, id du pays>
@@ -70,10 +70,17 @@ Nous avons ensuite adapté notre code pour produire une version monothread.... Q
 Les courbes ci dessous vous présente une comparaison des deux méthodes.
 
 
-![img](.png)
+![img](log.png)
+![img](lineaire.png)
+En abscisse des deux graphes, nous avons la quantité de malades testés. En ordonnée nous avons le temps ( en secondes ) d'execution. Nous avons utilisé nanoTime pour mesurer le temps d'execution avec :
+- Ryzen 3700x
+- 32Go 2666Mhz (Flck (OC) -> 1800MHZ)
+- MSI x570 Wifi Edge
+- SSD Samsumg EVO avec Magician cache
 
 Nous avons cependant une utilisation d'environ 1,5Go de RAM pour le test avec 1 million d'entrées.
 Plusieurs pistes :
 - La création de threads est potentiellement trop coûteuse par rapport au temps de calcul global
 - Nous ne faisons pas de calculs de benchmark, nous calculons un temps ( avec nanotime), un benchmark pourrait nous éclairer un peu plus
 - Le jeu de données n'est pas assez grand pour nous permettre de voir une différence notable.
+- Nous utilisons dans la version multithread des ArrayBlockingQueue qui sont Thread-Safe. Le fait de lock et de unlock coût en temps. 

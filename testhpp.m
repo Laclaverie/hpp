@@ -1,4 +1,4 @@
-%% Calculer la différence 
+%% Calculer la différence
 date_origine=  1589238000;
 date_calculer = 1588976154 ; 
 res=date_origine-date_calculer;
